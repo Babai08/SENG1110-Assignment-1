@@ -18,10 +18,14 @@ public class SystemInterface {
         System.out.print("Journey's transport Mode? ");
         transportMode = keyboard.next();
         j.setTransportMode(transportMode);
-        System.out.print("transportMode= " + j.getTransportMode());
+        System.out.println("transportMode= " + j.getTransportMode());
+
+        SmartCard card = new SmartCard();
+        card.setType('c');
+        JourneySetter(card, keyboard);
     }
 
-    public void JourneySetter(SmartCard card){
+    public void JourneySetter(SmartCard card, Scanner keyboard){
         Journey invalidJourney = new Journey();
         invalidJourney.setJourneyID(-1);
         invalidJourney.setTransportMode("NaN");
@@ -31,6 +35,23 @@ public class SystemInterface {
         if (card.getType() == 'c') {
             card.setJourney2(invalidJourney);
             card.setJourney3(invalidJourney);
+            System.out.println("You can set 1 Journey on this card.");
+            System.out.print("Journey ID? ");
+            int JourneyID = keyboard.nextInt();
+            System.out.print("Journey's transport mode? ");
+            String transportMode = keyboard.next();
+            System.out.print("Starting point? (1,10) ");
+            int start = keyboard.nextInt();
+            System.out.print("Ending point? (1,10) ");
+            int end = keyboard.nextInt();
+            Journey j = new Journey();
+            j.setJourneyID(JourneyID);
+            j.setTransportMode(transportMode);
+            j.setStartOfJourney(start);
+            j.setEndOfJourney(end);
+            j.setDistanceOfJourney();
+            card.setJourney1(j);
+
         }
     }
 
