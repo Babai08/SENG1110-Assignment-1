@@ -6,52 +6,205 @@ public class SystemInterface {
     private void run() {
 
         Scanner keyboard = new Scanner(System.in);
-        SmartCard sc = new SmartCard();
-        int cardID;
-        System.out.print("Card ID? ");
-        cardID = keyboard.nextInt();
-        sc.setSmartCardID(cardID);
-        System.out.println("Card ID = " + sc.getCardID());
-
-        Journey j = new Journey();
-        String transportMode;
-        System.out.print("Journey's transport Mode? ");
-        transportMode = keyboard.next();
-        j.setTransportMode(transportMode);
-        System.out.println("transportMode= " + j.getTransportMode());
 
         SmartCard card = new SmartCard();
-        card.setType('c');
-        JourneySetter(card, keyboard);
+        card.setType('a');
+        card = JourneySetter(card, keyboard);
+        System.out.println(card.getJourney1());
     }
 
-    public void JourneySetter(SmartCard card, Scanner keyboard){
-        Journey invalidJourney = new Journey();
-        invalidJourney.setJourneyID(-1);
-        invalidJourney.setTransportMode("NaN");
-        invalidJourney.setStartOfJourney(0);
-        invalidJourney.setEndOfJourney(0);
-        invalidJourney.setDistanceOfJourney();
+    public SmartCard JourneySetter(SmartCard card, Scanner keyboard){
+        SmartCard subCard = card;
         if (card.getType() == 'c') {
-            card.setJourney2(invalidJourney);
-            card.setJourney3(invalidJourney);
             System.out.println("You can set 1 Journey on this card.");
-            System.out.print("Journey ID? ");
-            int JourneyID = keyboard.nextInt();
-            System.out.print("Journey's transport mode? ");
-            String transportMode = keyboard.next();
-            System.out.print("Starting point? (1,10) ");
-            int start = keyboard.nextInt();
-            System.out.print("Ending point? (1,10) ");
-            int end = keyboard.nextInt();
-            Journey j = new Journey();
-            j.setJourneyID(JourneyID);
-            j.setTransportMode(transportMode);
-            j.setStartOfJourney(start);
-            j.setEndOfJourney(end);
-            j.setDistanceOfJourney();
-            card.setJourney1(j);
+            System.out.print("How many journeys would you like to set");
+            int numJourneys = keyboard.nextInt();
+            if (numJourneys == 1) {
+                System.out.print("Journey ID? ");
+                int JourneyID = keyboard.nextInt();
+                System.out.print("Journey's transport mode? ");
+                String transportMode = keyboard.next();
+                System.out.print("Starting point? (1,10) ");
+                int start = keyboard.nextInt();
+                System.out.print("Ending point? (1,10) ");
+                int end = keyboard.nextInt();
+                Journey j = new Journey();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney1(j);
+                return subCard;
+            } else if (numJourneys == 0) {
+                return subCard;
+            } else {
+                return JourneySetter(card, keyboard);
+            }
 
+        } else if (card.getType() == 'a') {
+            System.out.println("You can set 2 Journeys on this card.");
+            System.out.print("How many journeys would you like to set? ");
+            int numJourneys = keyboard.nextInt();
+            if (numJourneys == 2) {
+                System.out.print("Journey 1 ID? ");
+                int JourneyID = keyboard.nextInt();
+                System.out.print("Journey 1's transport mode? ");
+                String transportMode = keyboard.next();
+                System.out.print("Starting point for journey 1? (1,10) ");
+                int start = keyboard.nextInt();
+                System.out.print("Ending point for journey 1? (1,10) ");
+                int end = keyboard.nextInt();
+                Journey j = new Journey();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney1(j);
+
+                System.out.print("Journey 2 ID? ");
+                JourneyID = keyboard.nextInt();
+                System.out.print("Journey 2's transport mode? ");
+                transportMode = keyboard.next();
+                System.out.print("Starting point for journey 2? (1,10) ");
+                start = keyboard.nextInt();
+                System.out.print("Ending point for journey 2? (1,10) ");
+                end = keyboard.nextInt();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney2(j);
+                return subCard;
+            } else if (numJourneys == 1) {
+                System.out.print("Journey ID? ");
+                int JourneyID = keyboard.nextInt();
+                System.out.print("Journey's transport mode? ");
+                String transportMode = keyboard.next();
+                System.out.print("Starting point? (1,10) ");
+                int start = keyboard.nextInt();
+                System.out.print("Ending point? (1,10) ");
+                int end = keyboard.nextInt();
+                Journey j = new Journey();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney1(j);
+                return subCard;
+            } else if (numJourneys == 0) {
+                return subCard;
+            } else {
+                return JourneySetter(card, keyboard);
+            }
+        } else {
+            System.out.println("You can set 3 journeys on this card.");
+            System.out.print("How many journeys would you like to set?");
+            int numJourneys = keyboard.nextInt();
+            if (numJourneys == 3) {
+                System.out.print("Journey 1 ID? ");
+                int JourneyID = keyboard.nextInt();
+                System.out.print("Journey 1's transport mode? ");
+                String transportMode = keyboard.next();
+                System.out.print("Starting point for journey 1? (1,10) ");
+                int start = keyboard.nextInt();
+                System.out.print("Ending point for journey 1? (1,10) ");
+                int end = keyboard.nextInt();
+                Journey j = new Journey();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney1(j);
+
+                System.out.print("Journey 2 ID? ");
+                JourneyID = keyboard.nextInt();
+                System.out.print("Journey 2's transport mode? ");
+                transportMode = keyboard.next();
+                System.out.print("Starting point for journey 2? (1,10) ");
+                start = keyboard.nextInt();
+                System.out.print("Ending point for journey 2? (1,10) ");
+                end = keyboard.nextInt();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney2(j);
+
+                System.out.print("Journey 3 ID? ");
+                JourneyID = keyboard.nextInt();
+                System.out.print("Journey 3's transport mode? ");
+                transportMode = keyboard.next();
+                System.out.print("Starting point for journey 3? (1,10) ");
+                start = keyboard.nextInt();
+                System.out.print("Ending point for journey 3? (1,10) ");
+                end = keyboard.nextInt();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney3(j);
+                return subCard;
+            } else if (numJourneys == 2) {
+                System.out.print("Journey 1 ID? ");
+                int JourneyID = keyboard.nextInt();
+                System.out.print("Journey 1's transport mode? ");
+                String transportMode = keyboard.next();
+                System.out.print("Starting point for journey 1? (1,10) ");
+                int start = keyboard.nextInt();
+                System.out.print("Ending point for journey 1? (1,10) ");
+                int end = keyboard.nextInt();
+                Journey j = new Journey();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney1(j);
+
+                System.out.print("Journey 2 ID? ");
+                JourneyID = keyboard.nextInt();
+                System.out.print("Journey 2's transport mode? ");
+                transportMode = keyboard.next();
+                System.out.print("Starting point for journey 2? (1,10) ");
+                start = keyboard.nextInt();
+                System.out.print("Ending point for journey 2? (1,10) ");
+                end = keyboard.nextInt();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney2(j);
+                return subCard;
+            } else if (numJourneys == 1) {
+                System.out.print("Journey ID? ");
+                int JourneyID = keyboard.nextInt();
+                System.out.print("Journey's transport mode? ");
+                String transportMode = keyboard.next();
+                System.out.print("Starting point? (1,10) ");
+                int start = keyboard.nextInt();
+                System.out.print("Ending point? (1,10) ");
+                int end = keyboard.nextInt();
+                Journey j = new Journey();
+                j.setJourneyID(JourneyID);
+                j.setTransportMode(transportMode);
+                j.setStartOfJourney(start);
+                j.setEndOfJourney(end);
+                j.setDistanceOfJourney();
+                subCard.setJourney1(j);
+                return subCard;
+            } else if (numJourneys == 0) {
+                return subCard;
+            } else {
+                return JourneySetter(card, keyboard);
+            }
         }
     }
 
