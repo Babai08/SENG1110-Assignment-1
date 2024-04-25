@@ -22,13 +22,15 @@ public class SystemInterface {
     }
 
     public void JourneySetter(SmartCard card){
+        Journey invalidJourney = new Journey();
+        invalidJourney.setJourneyID(-1);
+        invalidJourney.setTransportMode("NaN");
+        invalidJourney.setStartOfJourney(0);
+        invalidJourney.setEndOfJourney(0);
+        invalidJourney.setDistanceOfJourney();
         if (card.getType() == 'c') {
-            Journey journey = new Journey();
-            journey.setStartOfJourney(0);
-            journey.setEndOfJourney(0);
-            journey.setDistanceOfJourney();
-            card.setJourney2(journey);
-            card.setJourney3(journey);
+            card.setJourney2(invalidJourney);
+            card.setJourney3(invalidJourney);
         }
     }
 
