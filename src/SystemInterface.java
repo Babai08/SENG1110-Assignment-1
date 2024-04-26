@@ -351,6 +351,14 @@ public class SystemInterface {
         }
     }
 
+    public SmartCard CardDeleter(SmartCard card) {
+        System.out.println(card.getCardID() + " has been deleted");
+        SmartCard subCard = new SmartCard();
+        subCard.setJourney1(InvalidJourney);
+        subCard.setJourney2(InvalidJourney);
+        subCard.setJourney3(InvalidJourney);
+        return subCard;
+    }
     public SmartCard JourneyDeleter(SmartCard card, Scanner keyboard) {
         SmartCard subCard = card;
         int J1 = card.getJourney1().getJourneyID();
