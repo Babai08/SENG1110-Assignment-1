@@ -13,6 +13,7 @@ public class SystemInterface {
     private final SmartCard InvalidCard = new SmartCard();
 
     private void run() {
+        // Sets up the properties for invalid variables
         InvalidJourney.setJourneyID(0);
         InvalidJourney.setStartOfJourney(0);
         InvalidJourney.setEndOfJourney(0);
@@ -25,6 +26,7 @@ public class SystemInterface {
         InvalidCard.setSmartCardID(0);
         InvalidCard.setBalance(0);
 
+        // Sets uninitialised SmartCards to the invalidCard by default to avoid null Value Errors in functions.
         smartCard1 = InvalidCard;
         smartCard2 = InvalidCard;
         smartCard3 = InvalidCard;
@@ -35,7 +37,7 @@ public class SystemInterface {
 
         smartCard1 = JourneySetter(smartCard1, keyboard);
 
-        TransportModeFinder("Train");
+        TransportModeFinder("train");
     }
 
     private void CardSetter(Scanner keyboard) {
@@ -686,7 +688,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 String transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey's transport mode? ");
                     transportMode = keyboard.next();
                 }
@@ -725,7 +727,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 String transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey 1's transport mode? ");
                     transportMode = keyboard.next();
                 }
@@ -753,7 +755,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey 2's transport mode? ");
                     transportMode = keyboard.next();
                 }
@@ -782,7 +784,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 String transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey's transport mode? ");
                     transportMode = keyboard.next();
                 }
@@ -820,7 +822,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 String transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey 1's transport mode? ");
                     transportMode = keyboard.next();
                 }
@@ -848,7 +850,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey 2's transport mode? ");
                     transportMode = keyboard.next();
                 }
@@ -876,7 +878,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey 3's transport mode? ");
                     transportMode = keyboard.next();
                 }
@@ -905,7 +907,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 String transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey 1's transport mode? ");
                     transportMode = keyboard.next();
                 }
@@ -933,7 +935,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey 2's transport mode? ");
                     transportMode = keyboard.next();
                 }
@@ -962,7 +964,7 @@ public class SystemInterface {
                     JourneyID = keyboard.nextInt();
                 }
                 String transportMode = " ";
-                while (!transportMode.equals("Train") && !transportMode.equals("Tram") && !transportMode.equals("Bus")) {
+                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                     System.out.print("Journey's transport mode? ");
                     transportMode = keyboard.next();
                 }
