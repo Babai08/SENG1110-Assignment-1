@@ -9,8 +9,8 @@ public class SystemInterface {
 
     private SmartCard smartCard1, smartCard2, smartCard3;
     // These are 2 invalid variables that are used in initialising and deleting.
-    private Journey InvalidJourney = new Journey();
-    private SmartCard InvalidCard = new SmartCard();
+    private final Journey InvalidJourney = new Journey();
+    private final SmartCard InvalidCard = new SmartCard();
 
     private void run() {
         InvalidJourney.setJourneyID(0);
@@ -32,19 +32,13 @@ public class SystemInterface {
 
         Scanner keyboard = new Scanner(System.in);
         CardSetter(keyboard);
-        System.out.println(smartCard1.getCardID() + smartCard1.getType() + smartCard1.getBalance() + smartCard1.getJourney1().getTransportMode() + smartCard1.getJourney1().getJourneyID());
-        System.out.println(smartCard2.getCardID() + smartCard2.getType() + smartCard2.getBalance() + smartCard2.getJourney1().getTransportMode() + smartCard2.getJourney1().getJourneyID());
-        System.out.println(smartCard3.getCardID() + smartCard3.getType() + smartCard3.getBalance() + smartCard3.getJourney1().getTransportMode() + smartCard3.getJourney1().getJourneyID());
 
         smartCard1 = JourneySetter(smartCard1, keyboard);
-        System.out.println(smartCard1.getCardID() + smartCard1.getType() + smartCard1.getBalance() + smartCard1.getJourney1().getTransportMode() + smartCard1.getJourney1().getJourneyID());
-        System.out.println(smartCard2.getCardID() + smartCard2.getType() + smartCard2.getBalance() + smartCard2.getJourney1().getTransportMode() + smartCard2.getJourney1().getJourneyID());
-        System.out.println(smartCard3.getCardID() + smartCard3.getType() + smartCard3.getBalance() + smartCard3.getJourney1().getTransportMode() + smartCard3.getJourney1().getJourneyID());
 
         TransportModeFinder("Train");
     }
 
-    public void CardSetter(Scanner keyboard) {
+    private void CardSetter(Scanner keyboard) {
         int C1 = smartCard1.getCardID();
         int C2 = smartCard2.getCardID();
         int C3 = smartCard3.getCardID();
@@ -66,16 +60,25 @@ public class SystemInterface {
                     while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
                         System.out.print("Card ID: ");
                         cardID = keyboard.nextInt();
+                        if (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                            System.out.println("Invalid Card ID.");
+                        }
                     }
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard1.setSmartCardID(cardID);
                     subCard1.setType(cardType);
@@ -94,12 +97,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 1's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 1: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard1.setSmartCardID(cardID);
                     subCard1.setType(cardType);
@@ -117,12 +126,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 2's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard2.setSmartCardID(cardID);
                     subCard2.setType(cardType);
@@ -141,12 +156,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 1's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 1: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard1.setSmartCardID(cardID);
                     subCard1.setType(cardType);
@@ -164,12 +185,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 2's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard2.setSmartCardID(cardID);
                     subCard2.setType(cardType);
@@ -187,12 +214,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 3's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 3: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard3.setSmartCardID(cardID);
                     subCard3.setType(cardType);
@@ -223,12 +256,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard1.setSmartCardID(cardID);
                     subCard1.setType(cardType);
@@ -247,12 +286,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 1's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 1: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard1.setSmartCardID(cardID);
                     subCard1.setType(cardType);
@@ -270,12 +315,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 2's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard2.setSmartCardID(cardID);
                     subCard2.setType(cardType);
@@ -306,12 +357,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard1.setSmartCardID(cardID);
                     subCard1.setType(cardType);
@@ -330,12 +387,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 1's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 1: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard1.setSmartCardID(cardID);
                     subCard1.setType(cardType);
@@ -353,12 +416,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 2's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard3.setSmartCardID(cardID);
                     subCard3.setType(cardType);
@@ -389,12 +458,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard2.setSmartCardID(cardID);
                     subCard2.setType(cardType);
@@ -413,12 +488,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 1's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 1: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard2.setSmartCardID(cardID);
                     subCard2.setType(cardType);
@@ -436,12 +517,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard 2's type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard3.setSmartCardID(cardID);
                     subCard3.setType(cardType);
@@ -472,12 +559,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard1.setSmartCardID(cardID);
                     subCard1.setType(cardType);
@@ -508,12 +601,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard2.setSmartCardID(cardID);
                     subCard2.setType(cardType);
@@ -544,12 +643,18 @@ public class SystemInterface {
                     cardType = 'n';
                     while (cardType != 'c' && cardType != 'a' && cardType != 's') {
                         System.out.print("SmartCard type: ");
-                        cardType = keyboard.next().charAt(0);
+                        cardType = keyboard.next().toLowerCase().charAt(0);
+                        if (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                            System.out.println("Invalid type, correct types are: C, A and S.");
+                        }
                     }
                     balance = -1;
-                    while (balance < 0) {
+                    while (balance < 5) {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
+                        if (balance < 5) {
+                            System.out.println("Please input a value above 5.");
+                        }
                     }
                     subCard3.setSmartCardID(cardID);
                     subCard3.setType(cardType);
@@ -568,7 +673,7 @@ public class SystemInterface {
         }
     }
 
-    private SmartCard JourneySetter(SmartCard card, Scanner keyboard){
+    private SmartCard JourneySetter(SmartCard card, Scanner keyboard) {
         SmartCard subCard = card;
         if (card.getType() == 'c') {
             System.out.println("You can set 1 Journey on this card.");
@@ -1077,6 +1182,156 @@ public class SystemInterface {
     }
 
     private void CardLister() {
+        int num1, num2, num3;
+        int sC1jID1 = smartCard1.getJourney1().getJourneyID();
+        int sC1jID2 = smartCard1.getJourney2().getJourneyID();
+        int sC1jID3 = smartCard1.getJourney3().getJourneyID();
+        int sC2jID1 = smartCard2.getJourney1().getJourneyID();
+        int sC2jID2 = smartCard2.getJourney2().getJourneyID();
+        int sC2jID3 = smartCard2.getJourney3().getJourneyID();
+        int sC3jID1 = smartCard3.getJourney1().getJourneyID();
+        int sC3jID2 = smartCard3.getJourney2().getJourneyID();
+        int sC3jID3 = smartCard3.getJourney3().getJourneyID();
+        if (sC1jID1 != 0 && sC1jID2 != 0 && sC1jID3 != 0) {
+            num1 = 3;
+        } else if (sC1jID1 != 0 && sC1jID2 != 0) {
+            num1 = 2;
+        } else if (sC1jID1 != 0 && sC1jID3 != 0) {
+            num1 = 2;
+        } else if (sC1jID2 != 0 && sC1jID3 != 0) {
+            num1 = 2;
+        } else if (sC1jID1 != 0) {
+            num1 = 1;
+        } else if (sC1jID2 != 0) {
+            num1 = 1;
+        } else if (sC1jID3 != 0) {
+            num1 = 1;
+        } else {
+            num1 = 0;
+        }
+        if (sC2jID1 != 0 && sC2jID2 != 0 && sC2jID3 != 0) {
+            num2 = 3;
+        } else if (sC2jID1 != 0 && sC2jID2 != 0) {
+            num2 = 2;
+        } else if (sC2jID1 != 0 && sC2jID3 != 0) {
+            num2 = 2;
+        } else if (sC2jID2 != 0 && sC2jID3 != 0) {
+            num2 = 2;
+        } else if (sC2jID1 != 0) {
+            num2 = 1;
+        } else if (sC2jID2 != 0) {
+            num2 = 1;
+        } else if (sC2jID3 != 0) {
+            num2 = 1;
+        } else {
+            num2 = 0;
+        }
+        if (sC3jID1 != 0 && sC3jID2 != 0 && sC3jID3 != 0) {
+            num3 = 3;
+        } else if (sC3jID1 != 0 && sC3jID2 != 0) {
+            num3 = 2;
+        } else if (sC3jID1 != 0 && sC3jID3 != 0) {
+            num3 = 2;
+        } else if (sC3jID2 != 0 && sC3jID3 != 0) {
+            num3 = 2;
+        } else if (sC3jID1 != 0) {
+            num3 = 1;
+        } else if (sC3jID2 != 0) {
+            num3 = 1;
+        } else if (sC3jID3 != 0) {
+            num3 = 1;
+        } else {
+            num3 = 0;
+        }
+        if (sC1jID1 != 0 && sC1jID2 != 0 && sC1jID3 != 0) {
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+            System.out.println("Journey " + sC1jID1 + " has transport mode " + smartCard1.getJourney1().getTransportMode() + ".");
+            System.out.println("Journey " + sC1jID2 + " has transport mode " + smartCard1.getJourney2().getTransportMode() + ".");
+            System.out.println("Journey " + sC1jID3 + " has transport mode " + smartCard1.getJourney3().getTransportMode() + ".");
+        } else if (sC1jID1 != 0 && sC1jID2 != 0) {
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+            System.out.println("Journey " + sC1jID1 + " has transport mode " + smartCard1.getJourney1().getTransportMode() + ".");
+            System.out.println("Journey " + sC1jID2 + " has transport mode " + smartCard1.getJourney2().getTransportMode() + ".");
+        } else if (sC1jID1 != 0  && sC1jID3 != 0) {
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+            System.out.println("Journey " + sC1jID1 + " has transport mode " + smartCard1.getJourney1().getTransportMode() + ".");
+            System.out.println("Journey " + sC1jID3 + " has transport mode " + smartCard1.getJourney3().getTransportMode() + ".");
+        } else if (sC1jID2 != 0 && sC1jID3 != 0) {
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+            System.out.println("Journey " + sC1jID2 + " has transport mode " + smartCard1.getJourney2().getTransportMode() + ".");
+            System.out.println("Journey " + sC1jID3 + " has transport mode " + smartCard1.getJourney3().getTransportMode() + ".");
+        } else if (sC1jID1 != 0) {
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journey.");
+            System.out.println("Journey " + sC1jID1 + " has transport mode " + smartCard1.getJourney1().getTransportMode() + ".");
+        } else if (sC1jID2 != 0) {
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journey.");
+            System.out.println("Journey " + sC1jID2 + " has transport mode " + smartCard1.getJourney2().getTransportMode() + ".");
+        } else if (sC1jID3 != 0) {
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journey.");
+            System.out.println("Journey " + sC1jID3 + " has transport mode " + smartCard1.getJourney3().getTransportMode() + ".");
+        } else if (smartCard1 != InvalidCard) {
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+        }
+
+        if (sC2jID1 != 0 && sC2jID2 != 0 && sC2jID3 != 0) {
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+            System.out.println("Journey " + sC2jID1 + " has transport mode " + smartCard2.getJourney1().getTransportMode() + ".");
+            System.out.println("Journey " + sC2jID2 + " has transport mode " + smartCard2.getJourney2().getTransportMode() + ".");
+            System.out.println("Journey " + sC2jID3 + " has transport mode " + smartCard2.getJourney3().getTransportMode() + ".");
+        } else if (sC2jID1 != 0 && sC2jID2 != 0) {
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+            System.out.println("Journey " + sC2jID1 + " has transport mode " + smartCard2.getJourney1().getTransportMode() + ".");
+            System.out.println("Journey " + sC2jID2 + " has transport mode " + smartCard2.getJourney2().getTransportMode() + ".");
+        } else if (sC2jID1 != 0  && sC2jID3 != 0) {
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+            System.out.println("Journey " + sC2jID1 + " has transport mode " + smartCard2.getJourney1().getTransportMode() + ".");
+            System.out.println("Journey " + sC2jID3 + " has transport mode " + smartCard2.getJourney3().getTransportMode() + ".");
+        } else if (sC2jID2 != 0 && sC2jID3 != 0) {
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+            System.out.println("Journey " + sC2jID2 + " has transport mode " + smartCard2.getJourney2().getTransportMode() + ".");
+            System.out.println("Journey " + sC2jID3 + " has transport mode " + smartCard2.getJourney3().getTransportMode() + ".");
+        } else if (sC2jID1 != 0) {
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journey.");
+            System.out.println("Journey " + sC2jID1 + " has transport mode " + smartCard2.getJourney1().getTransportMode() + ".");
+        } else if (sC2jID2 != 0) {
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journey.");
+            System.out.println("Journey " + sC2jID2 + " has transport mode " + smartCard2.getJourney2().getTransportMode() + ".");
+        } else if (sC2jID3 != 0) {
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journey.");
+            System.out.println("Journey " + sC2jID3 + " has transport mode " + smartCard2.getJourney3().getTransportMode() + ".");
+        } else if (smartCard2 != InvalidCard) {
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+        }
+
+        if (sC3jID1 != 0 && sC3jID2 != 0 && sC3jID3 != 0) {
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+            System.out.println("Journey " + sC3jID1 + " has transport mode " + smartCard3.getJourney1().getTransportMode() + ".");
+            System.out.println("Journey " + sC3jID2 + " has transport mode " + smartCard3.getJourney2().getTransportMode() + ".");
+            System.out.println("Journey " + sC3jID3 + " has transport mode " + smartCard3.getJourney3().getTransportMode() + ".");
+        } else if (sC3jID1 != 0 && sC3jID2 != 0) {
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+            System.out.println("Journey " + sC3jID1 + " has transport mode " + smartCard3.getJourney1().getTransportMode() + ".");
+            System.out.println("Journey " + sC3jID2 + " has transport mode " + smartCard3.getJourney2().getTransportMode() + ".");
+        } else if (sC3jID1 != 0  && sC3jID3 != 0) {
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+            System.out.println("Journey " + sC3jID1 + " has transport mode " + smartCard3.getJourney1().getTransportMode() + ".");
+            System.out.println("Journey " + sC3jID3 + " has transport mode " + smartCard3.getJourney3().getTransportMode() + ".");
+        } else if (sC3jID2 != 0 && sC3jID3 != 0) {
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+            System.out.println("Journey " + sC3jID2 + " has transport mode " + smartCard3.getJourney2().getTransportMode() + ".");
+            System.out.println("Journey " + sC3jID3 + " has transport mode " + smartCard3.getJourney3().getTransportMode() + ".");
+        } else if (sC3jID1 != 0) {
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journey.");
+            System.out.println("Journey " + sC3jID1 + " has transport mode " + smartCard3.getJourney1().getTransportMode() + ".");
+        } else if (sC3jID2 != 0) {
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journey.");
+            System.out.println("Journey " + sC3jID2 + " has transport mode " + smartCard3.getJourney2().getTransportMode() + ".");
+        } else if (sC3jID3 != 0) {
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num1 + "journey.");
+            System.out.println("Journey " + sC3jID3 + " has transport mode " + smartCard3.getJourney3().getTransportMode() + ".");
+        } else if (smartCard3 != InvalidCard) {
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+        }
 
     }
 
