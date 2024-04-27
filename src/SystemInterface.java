@@ -2,10 +2,9 @@ import java.util.Scanner;
 
 public class SystemInterface {
 
-    private SmartCard smartCard1 = new SmartCard();
-    private SmartCard smartCard2 = new SmartCard();
-    private SmartCard smartCard3 = new SmartCard();
+    private SmartCard smartCard1, smartCard2, smartCard3;
     private Journey InvalidJourney = new Journey();
+    private SmartCard InvalidCard = new SmartCard();
 
     private void run() {
         InvalidJourney.setJourneyID(0);
@@ -13,26 +12,477 @@ public class SystemInterface {
         InvalidJourney.setEndOfJourney(0);
         InvalidJourney.setTransportMode("NaN");
         InvalidJourney.setDistanceOfJourney();
+        InvalidCard.setJourney1(InvalidJourney);
+        InvalidCard.setJourney2(InvalidJourney);
+        InvalidCard.setJourney3(InvalidJourney);
+        InvalidCard.setType('n');
+        InvalidCard.setSmartCardID(0);
+        InvalidCard.setBalance(0);
 
-        smartCard1.setJourney1(InvalidJourney);
-        smartCard1.setJourney2(InvalidJourney);
-        smartCard1.setJourney3(InvalidJourney);
-        smartCard2.setJourney1(InvalidJourney);
-        smartCard2.setJourney2(InvalidJourney);
-        smartCard2.setJourney3(InvalidJourney);
-        smartCard3.setJourney1(InvalidJourney);
-        smartCard3.setJourney2(InvalidJourney);
-        smartCard3.setJourney3(InvalidJourney);
+        smartCard1 = InvalidCard;
+        smartCard2 = InvalidCard;
+        smartCard3 = InvalidCard;
 
 
         Scanner keyboard = new Scanner(System.in);
+        CardSetter(keyboard);
 
         smartCard1.setType('a');
         smartCard1 = JourneySetter(smartCard1, keyboard);
         JourneyDeleter(smartCard1, keyboard);
     }
 
-    public SmartCard JourneySetter(SmartCard card, Scanner keyboard){
+    private void CardSetter(Scanner keyboard) {
+
+        int C1 = smartCard1.getCardID();
+        int C2 = smartCard2.getCardID();
+        int C3 = smartCard3.getCardID();
+        int cardID;
+        char cardType;
+        double balance;
+        if (C1 == 0 && C2 == 0 && C3 == 0) {
+            System.out.print("How many cards would you like to set (0-3)? ");
+            int numCards = keyboard.nextInt();
+            switch (numCards) {
+                case 0:
+                    System.out.println("No SmartCards were set.");
+                    break;
+                case 1:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard1.setSmartCardID(cardID);
+                    smartCard1.setType(cardType);
+                    smartCard1.setBalance(balance);
+                    break;
+                case 2:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card 1's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 1's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 1: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard1.setSmartCardID(cardID);
+                    smartCard1.setType(cardType);
+                    smartCard1.setBalance(balance);
+
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID > 1) {
+                        System.out.print("Card 2's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 2's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 2: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard2.setSmartCardID(cardID);
+                    smartCard2.setType(cardType);
+                    smartCard2.setBalance(balance);
+                    break;
+                case 3:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID > 1) {
+                        System.out.print("Card 1's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 1's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 1: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard1.setSmartCardID(cardID);
+                    smartCard1.setType(cardType);
+                    smartCard1.setBalance(balance);
+
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card 2's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 2's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 2: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard2.setSmartCardID(cardID);
+                    smartCard2.setType(cardType);
+                    smartCard2.setBalance(balance);
+
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID < 1) {
+                        System.out.print("Card 2's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 2's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 2: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard3.setSmartCardID(cardID);
+                    smartCard3.setType(cardType);
+                    smartCard3.setBalance(balance);
+                    break;
+                default:
+                    System.out.println("Invalid input.");
+                    CardSetter(keyboard);
+                    break;
+            }
+        } else if (C1 == 0 && C2 == 0) {
+            System.out.print("How many cards would you like to set (0-2)? ");
+            int numCards = keyboard.nextInt();
+            switch (numCards) {
+                case 0:
+                    System.out.println("No SmartCards were set.");
+                    break;
+                case 1:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard1.setSmartCardID(cardID);
+                    smartCard1.setType(cardType);
+                    smartCard1.setBalance(balance);
+                    break;
+                case 2:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card 1's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 1's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 1: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard1.setSmartCardID(cardID);
+                    smartCard1.setType(cardType);
+                    smartCard1.setBalance(balance);
+
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID > 1) {
+                        System.out.print("Card 2's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 2's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 2: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard2.setSmartCardID(cardID);
+                    smartCard2.setType(cardType);
+                    smartCard2.setBalance(balance);
+                    break;
+                default:
+                    System.out.println("Invalid input.");
+                    CardSetter(keyboard);
+                    break;
+            }
+        } else if (C1 == 0 && C3 == 0) {
+            System.out.print("How many cards would you like to set (0-2)? ");
+            int numCards = keyboard.nextInt();
+            switch (numCards) {
+                case 0:
+                    System.out.println("No SmartCards were set.");
+                    break;
+                case 1:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard1.setSmartCardID(cardID);
+                    smartCard1.setType(cardType);
+                    smartCard1.setBalance(balance);
+                    break;
+                case 2:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card 1's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 1's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 1: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard1.setSmartCardID(cardID);
+                    smartCard1.setType(cardType);
+                    smartCard1.setBalance(balance);
+
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID > 1) {
+                        System.out.print("Card 2's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 2's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 2: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard3.setSmartCardID(cardID);
+                    smartCard3.setType(cardType);
+                    smartCard3.setBalance(balance);
+                    break;
+                default:
+                    System.out.println("Invalid input.");
+                    CardSetter(keyboard);
+                    break;
+            }
+        } else if (C2 == 0 && C3 == 0) {
+            System.out.print("How many cards would you like to set (0-2)? ");
+            int numCards = keyboard.nextInt();
+            switch (numCards) {
+                case 0:
+                    System.out.println("No SmartCards were set.");
+                    break;
+                case 1:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard1.setSmartCardID(cardID);
+                    smartCard1.setType(cardType);
+                    smartCard1.setBalance(balance);
+                    break;
+                case 2:
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card 1's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 1's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 1: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard2.setSmartCardID(cardID);
+                    smartCard2.setType(cardType);
+                    smartCard2.setBalance(balance);
+
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID > 1) {
+                        System.out.print("Card 2's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 2's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 2: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard3.setSmartCardID(cardID);
+                    smartCard3.setType(cardType);
+                    smartCard3.setBalance(balance);
+                    break;
+                default:
+                    System.out.println("Invalid input.");
+                    CardSetter(keyboard);
+                    break;
+            }
+        } else if (C1 == 0) {
+            System.out.print("How many cards would you like to set (0-1)? ");
+            int numCards = keyboard.nextInt();
+            switch (numCards) {
+                case 0:
+                    System.out.println("No SmartCards were set.");
+                    break;
+                case 1:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard1.setSmartCardID(cardID);
+                    smartCard1.setType(cardType);
+                    smartCard1.setBalance(balance);
+                    break;
+                default:
+                    System.out.println("Invalid input.");
+                    CardSetter(keyboard);
+                    break;
+            }
+        } else if (C2 == 0) {
+            System.out.print("How many cards would you like to set (0-1)? ");
+            int numCards = keyboard.nextInt();
+            switch (numCards) {
+                case 0:
+                    System.out.println("No SmartCards were set.");
+                    break;
+                case 1:
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard2.setSmartCardID(cardID);
+                    smartCard2.setType(cardType);
+                    smartCard2.setBalance(balance);
+                    break;
+                default:
+                    System.out.println("Invalid input.");
+                    CardSetter(keyboard);
+                    break;
+            }
+        } else if (C3 == 0) {
+            System.out.print("How many cards would you like to set (0-1)? ");
+            int numCards = keyboard.nextInt();
+            switch (numCards) {
+                case 0:
+                    System.out.println("No SmartCards were set.");
+                    break;
+                case 1:
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID < 1) {
+                        System.out.print("Card ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    smartCard3.setSmartCardID(cardID);
+                    smartCard3.setType(cardType);
+                    smartCard3.setBalance(balance);
+                default:
+                    System.out.println("Invalid input.");
+                    CardSetter(keyboard);
+                    break;
+            }
+        } else {
+            System.out.println("You already have the maximum amount of SmartCards.");
+        }
+    }
+
+    private SmartCard JourneySetter(SmartCard card, Scanner keyboard){
         SmartCard subCard = card;
         if (card.getType() == 'c') {
             System.out.println("You can set 1 Journey on this card.");
@@ -351,15 +801,12 @@ public class SystemInterface {
         }
     }
 
-    public SmartCard CardDeleter(SmartCard card) {
+    private SmartCard CardDeleter(SmartCard card) {
         System.out.println(card.getCardID() + " has been deleted");
-        SmartCard subCard = new SmartCard();
-        subCard.setJourney1(InvalidJourney);
-        subCard.setJourney2(InvalidJourney);
-        subCard.setJourney3(InvalidJourney);
-        return subCard;
+        return InvalidCard;
     }
-    public SmartCard JourneyDeleter(SmartCard card, Scanner keyboard) {
+
+    private SmartCard JourneyDeleter(SmartCard card, Scanner keyboard) {
         SmartCard subCard = card;
         int J1 = card.getJourney1().getJourneyID();
         int J2 = card.getJourney2().getJourneyID();
