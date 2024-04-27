@@ -1336,7 +1336,42 @@ public class SystemInterface {
     }
 
     private void JourneyLister() {
-
+        Journey sC1J1 = smartCard1.getJourney1();
+        Journey sC1J2 = smartCard1.getJourney2();
+        Journey sC1J3 = smartCard1.getJourney3();
+        Journey sC2J1 = smartCard2.getJourney1();
+        Journey sC2J2 = smartCard2.getJourney2();
+        Journey sC2J3 = smartCard2.getJourney3();
+        Journey sC3J1 = smartCard3.getJourney1();
+        Journey sC3J2 = smartCard3.getJourney2();
+        Journey sC3J3 = smartCard3.getJourney3();
+        if (sC1J1 != InvalidJourney) {
+            System.out.println("Journey " + sC1J1.getJourneyID() + " has transport mode " + sC1J1.getTransportMode() + " starting from " + sC1J1.getStartOfJourney() + " and ending at " + sC1J1.getEndOfJourney() + " with journey distance of " + sC1J1.getDistanceOfJourney() + " station(s)/stop(s)");
+        }
+        if (sC1J2 != InvalidJourney) {
+            System.out.println("Journey " + sC1J2.getJourneyID() + " has transport mode " + sC1J2.getTransportMode() + " starting from " + sC1J2.getStartOfJourney() + " and ending at " + sC1J2.getEndOfJourney() + " with journey distance of " + sC1J2.getDistanceOfJourney() + " station(s)/stop(s)");
+        }
+        if (sC1J3 != InvalidJourney) {
+            System.out.println("Journey " + sC1J3.getJourneyID() + " has transport mode " + sC1J3.getTransportMode() + " starting from " + sC1J3.getStartOfJourney() + " and ending at " + sC1J3.getEndOfJourney() + " with journey distance of " + sC1J3.getDistanceOfJourney() + " station(s)/stop(s)");
+        }
+        if (sC2J1 != InvalidJourney) {
+            System.out.println("Journey " + sC2J1.getJourneyID() + " has transport mode " + sC2J1.getTransportMode() + " starting from " + sC2J1.getStartOfJourney() + " and ending at " + sC2J1.getEndOfJourney() + " with journey distance of " + sC2J1.getDistanceOfJourney() + " station(s)/stop(s)");
+        }
+        if (sC2J2 != InvalidJourney) {
+            System.out.println("Journey " + sC2J2.getJourneyID() + " has transport mode " + sC2J2.getTransportMode() + " starting from " + sC2J2.getStartOfJourney() + " and ending at " + sC2J2.getEndOfJourney() + " with journey distance of " + sC2J2.getDistanceOfJourney() + " station(s)/stop(s)");
+        }
+        if (sC2J3 != InvalidJourney) {
+            System.out.println("Journey " + sC2J3.getJourneyID() + " has transport mode " + sC2J3.getTransportMode() + " starting from " + sC2J3.getStartOfJourney() + " and ending at " + sC2J3.getEndOfJourney() + " with journey distance of " + sC2J3.getDistanceOfJourney() + " station(s)/stop(s)");
+        }
+        if (sC3J1 != InvalidJourney) {
+            System.out.println("Journey " + sC3J1.getJourneyID() + " has transport mode " + sC3J1.getTransportMode() + " starting from " + sC3J1.getStartOfJourney() + " and ending at " + sC3J1.getEndOfJourney() + " with journey distance of " + sC3J1.getDistanceOfJourney() + " station(s)/stop(s)");
+        }
+        if (sC3J2 != InvalidJourney) {
+            System.out.println("Journey " + sC3J2.getJourneyID() + " has transport mode " + sC3J2.getTransportMode() + " starting from " + sC3J2.getStartOfJourney() + " and ending at " + sC3J2.getEndOfJourney() + " with journey distance of " + sC3J2.getDistanceOfJourney() + " station(s)/stop(s)");
+        }
+        if (sC3J3 != InvalidJourney) {
+            System.out.println("Journey " + sC3J3.getJourneyID() + " has transport mode " + sC3J3.getTransportMode() + " starting from " + sC3J3.getStartOfJourney() + " and ending at " + sC3J3.getEndOfJourney() + " with journey distance of " + sC3J3.getDistanceOfJourney() + " station(s)/stop(s)");
+        }
     }
 
     private void TransportModeFinder(String mode) {
