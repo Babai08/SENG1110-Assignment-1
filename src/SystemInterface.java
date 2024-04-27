@@ -1,10 +1,16 @@
+/*
+Author: Lachlan Muddle - c3428808, Jacob Saunders - c3412899
+Date: 27/03/2024 - 03/05/2024
+Task: SENG1110 Programming Assignment 1
+*/
 import java.util.Scanner;
 
 public class SystemInterface {
 
     private SmartCard smartCard1, smartCard2, smartCard3;
-    private Journey InvalidJourney = new Journey();
-    private SmartCard InvalidCard = new SmartCard();
+    // These are 2 invalid variables that are used in initialising and deleting.
+    private final Journey InvalidJourney = new Journey();
+    private final SmartCard InvalidCard = new SmartCard();
 
     private void run() {
         InvalidJourney.setJourneyID(0);
@@ -27,13 +33,11 @@ public class SystemInterface {
         Scanner keyboard = new Scanner(System.in);
         CardSetter(keyboard);
 
-        smartCard1.setType('a');
         smartCard1 = JourneySetter(smartCard1, keyboard);
         JourneyDeleter(smartCard1, keyboard);
     }
 
     private void CardSetter(Scanner keyboard) {
-
         int C1 = smartCard1.getCardID();
         int C2 = smartCard2.getCardID();
         int C3 = smartCard3.getCardID();
@@ -801,9 +805,88 @@ public class SystemInterface {
         }
     }
 
-    private SmartCard CardDeleter(SmartCard card) {
-        System.out.println(card.getCardID() + " has been deleted");
-        return InvalidCard;
+    private void CardDeleter(Scanner keyboard) {
+        int C1 = smartCard1.getCardID();
+        int C2 = smartCard2.getCardID();
+        int C3 = smartCard3.getCardID();
+        if (C1 != 0 && C2 != 0 && C3 !=0) {
+            System.out.println("The available SmartCard's are: " + C1 + ", " + C2 + " and " + C3 + ".");
+            int deleted = 0;
+            while (deleted != C1 && deleted != C2 && deleted != C3) {
+                System.out.print("Which card would you like to delete?");
+                deleted = keyboard.nextInt();
+            }
+            if (deleted == C1) {
+                smartCard1 = InvalidCard;
+            } else if (deleted == C2) {
+                smartCard2 = InvalidCard;
+            } else {
+                smartCard3 = InvalidCard;
+            }
+
+        } else if (C1 != 0 && C2 != 0) {
+            System.out.println("The available SmartCard's are: " + C1 + " and " + C2 + ".");
+            int deleted = 0;
+            while (deleted != C1 && deleted != C2) {
+                System.out.print("Which card would you like to delete?");
+                deleted = keyboard.nextInt();
+            }
+            if (deleted == C1) {
+                smartCard1 = InvalidCard;
+            } else {
+                smartCard2 = InvalidCard;
+            }
+        } else if (C1 != 0 && C3 != 0) {
+            System.out.println("The available SmartCard's are: " + C1 + " and " + C3 + ".");
+            int deleted = 0;
+            while (deleted != C1 && deleted != C3) {
+                System.out.print("Which card would you like to delete?");
+                deleted = keyboard.nextInt();
+            }
+            if (deleted == C1) {
+                smartCard1 = InvalidCard;
+            } else {
+                smartCard3 = InvalidCard;
+            }
+        } else if (C2 != 0 && C3 != 0) {
+            System.out.println("The available SmartCard's are: " + C2 + " and " + C3 + ".");
+            int deleted = 0;
+            while (deleted != C2 && deleted != C3) {
+                System.out.print("Which card would you like to delete?");
+                deleted = keyboard.nextInt();
+            }
+            if (deleted == C2) {
+                smartCard2 = InvalidCard;
+            } else {
+                smartCard3 = InvalidCard;
+            }
+        } else if (C1 != 0) {
+            System.out.println("The available SmartCard's are: " + C1 + ".");
+            int deleted = 0;
+            while (deleted != C1) {
+                System.out.print("Which card would you like to delete?");
+                deleted = keyboard.nextInt();
+            }
+            smartCard1 = InvalidCard;
+        } else if (C2 != 0) {
+            System.out.println("The available SmartCard's are: " + C2 + ".");
+            int deleted = 0;
+            while (deleted != C2) {
+                System.out.print("Which card would you like to delete?");
+                deleted = keyboard.nextInt();
+            }
+            smartCard2 = InvalidCard;
+        } else if (C3 != 0) {
+            System.out.println("The available SmartCard's are: " + C3 + ".");
+            int deleted = 0;
+            while (deleted != C3) {
+                System.out.print("Which card would you like to delete?");
+                deleted = keyboard.nextInt();
+            }
+            smartCard3 = InvalidCard;
+        } else {
+            System.out.println("There are no SmartCard's to delete.");
+        }
     }
 
     private SmartCard JourneyDeleter(SmartCard card, Scanner keyboard) {
