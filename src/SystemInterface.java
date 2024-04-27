@@ -55,9 +55,39 @@ public class SystemInterface {
         }
     }
 
+
+    public void CardSetter(Scanner keyboard) {
+        int numberOfCards;
+        SmartCard sc1 = new SmartCard();
+        SmartCard sc2 = new SmartCard();
+        SmartCard sc3 = new SmartCard();
+        System.out.print("How many cards would you like to add?");
+        System.out.print("Input a number of cards between 0 to 3");
+        numberOfCards = keyboard.nextInt();
+        for (int i = 1; i <= numberOfCards; i++) {
+            System.out.print("Card" + i + "type: ");
+            char type = keyboard.next();
+            if (type = "c") {
+
+            }
+            else if (type = "a") {
+
+            }
+            else if (type = "S") {
+
+            }
+            else {
+                System.out.print("Invalid card type, please try again");
+
+            }
+        }
+    }
+
+
     public static void main(String[] args) {
         SystemInterface systemUI = new SystemInterface();
         systemUI.run();
 
     }
 }
+
