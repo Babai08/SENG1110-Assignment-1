@@ -9,8 +9,8 @@ public class SystemInterface {
 
     private SmartCard smartCard1, smartCard2, smartCard3;
     // These are 2 invalid variables that are used in initialising and deleting.
-    private final Journey InvalidJourney = new Journey();
-    private final SmartCard InvalidCard = new SmartCard();
+    private Journey InvalidJourney = new Journey();
+    private SmartCard InvalidCard = new SmartCard();
 
     private void run() {
         InvalidJourney.setJourneyID(0);
@@ -32,15 +32,25 @@ public class SystemInterface {
 
         Scanner keyboard = new Scanner(System.in);
         CardSetter(keyboard);
+        System.out.println(smartCard1.getCardID() + smartCard1.getType() + smartCard1.getBalance() + smartCard1.getJourney1().getTransportMode() + smartCard1.getJourney1().getJourneyID());
+        System.out.println(smartCard2.getCardID() + smartCard2.getType() + smartCard2.getBalance() + smartCard2.getJourney1().getTransportMode() + smartCard2.getJourney1().getJourneyID());
+        System.out.println(smartCard3.getCardID() + smartCard3.getType() + smartCard3.getBalance() + smartCard3.getJourney1().getTransportMode() + smartCard3.getJourney1().getJourneyID());
 
         smartCard1 = JourneySetter(smartCard1, keyboard);
-        JourneyDeleter(smartCard1, keyboard);
+        System.out.println(smartCard1.getCardID() + smartCard1.getType() + smartCard1.getBalance() + smartCard1.getJourney1().getTransportMode() + smartCard1.getJourney1().getJourneyID());
+        System.out.println(smartCard2.getCardID() + smartCard2.getType() + smartCard2.getBalance() + smartCard2.getJourney1().getTransportMode() + smartCard2.getJourney1().getJourneyID());
+        System.out.println(smartCard3.getCardID() + smartCard3.getType() + smartCard3.getBalance() + smartCard3.getJourney1().getTransportMode() + smartCard3.getJourney1().getJourneyID());
+
+        TransportModeFinder("Train");
     }
 
-    private void CardSetter(Scanner keyboard) {
+    public void CardSetter(Scanner keyboard) {
         int C1 = smartCard1.getCardID();
         int C2 = smartCard2.getCardID();
         int C3 = smartCard3.getCardID();
+        SmartCard subCard1 = new SmartCard();
+        SmartCard subCard2 = new SmartCard();
+        SmartCard subCard3 = new SmartCard();
         int cardID;
         char cardType;
         double balance;
@@ -67,9 +77,13 @@ public class SystemInterface {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard1.setSmartCardID(cardID);
-                    smartCard1.setType(cardType);
-                    smartCard1.setBalance(balance);
+                    subCard1.setSmartCardID(cardID);
+                    subCard1.setType(cardType);
+                    subCard1.setBalance(balance);
+                    subCard1.setJourney1(InvalidJourney);
+                    subCard1.setJourney2(InvalidJourney);
+                    subCard1.setJourney3(InvalidJourney);
+                    smartCard1 = subCard1;
                     break;
                 case 2:
                     cardID = 0;
@@ -87,48 +101,13 @@ public class SystemInterface {
                         System.out.print("Balance 1: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard1.setSmartCardID(cardID);
-                    smartCard1.setType(cardType);
-                    smartCard1.setBalance(balance);
-
-                    cardID = 0;
-                    while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID > 1) {
-                        System.out.print("Card 2's ID: ");
-                        cardID = keyboard.nextInt();
-                    }
-                    cardType = 'n';
-                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
-                        System.out.print("SmartCard 2's type: ");
-                        cardType = keyboard.next().charAt(0);
-                    }
-                    balance = -1;
-                    while (balance < 0) {
-                        System.out.print("Balance 2: ");
-                        balance = keyboard.nextDouble();
-                    }
-                    smartCard2.setSmartCardID(cardID);
-                    smartCard2.setType(cardType);
-                    smartCard2.setBalance(balance);
-                    break;
-                case 3:
-                    cardID = 0;
-                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID > 1) {
-                        System.out.print("Card 1's ID: ");
-                        cardID = keyboard.nextInt();
-                    }
-                    cardType = 'n';
-                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
-                        System.out.print("SmartCard 1's type: ");
-                        cardType = keyboard.next().charAt(0);
-                    }
-                    balance = -1;
-                    while (balance < 0) {
-                        System.out.print("Balance 1: ");
-                        balance = keyboard.nextDouble();
-                    }
-                    smartCard1.setSmartCardID(cardID);
-                    smartCard1.setType(cardType);
-                    smartCard1.setBalance(balance);
+                    subCard1.setSmartCardID(cardID);
+                    subCard1.setType(cardType);
+                    subCard1.setBalance(balance);
+                    subCard1.setJourney1(InvalidJourney);
+                    subCard1.setJourney2(InvalidJourney);
+                    subCard1.setJourney3(InvalidJourney);
+                    smartCard1 = subCard1;
 
                     cardID = 0;
                     while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
@@ -145,12 +124,40 @@ public class SystemInterface {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard2.setSmartCardID(cardID);
-                    smartCard2.setType(cardType);
-                    smartCard2.setBalance(balance);
+                    subCard2.setSmartCardID(cardID);
+                    subCard2.setType(cardType);
+                    subCard2.setBalance(balance);
+                    subCard2.setJourney1(InvalidJourney);
+                    subCard2.setJourney2(InvalidJourney);
+                    subCard2.setJourney3(InvalidJourney);
+                    smartCard2 = subCard2;
+                    break;
+                case 3:
+                    cardID = 0;
+                    while (cardID == smartCard2.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
+                        System.out.print("Card 1's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 1's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 1: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    subCard1.setSmartCardID(cardID);
+                    subCard1.setType(cardType);
+                    subCard1.setBalance(balance);
+                    subCard1.setJourney1(InvalidJourney);
+                    subCard1.setJourney2(InvalidJourney);
+                    subCard1.setJourney3(InvalidJourney);
+                    smartCard1 = subCard1;
 
                     cardID = 0;
-                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID < 1) {
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
                         System.out.print("Card 2's ID: ");
                         cardID = keyboard.nextInt();
                     }
@@ -164,9 +171,36 @@ public class SystemInterface {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard3.setSmartCardID(cardID);
-                    smartCard3.setType(cardType);
-                    smartCard3.setBalance(balance);
+                    subCard2.setSmartCardID(cardID);
+                    subCard2.setType(cardType);
+                    subCard2.setBalance(balance);
+                    subCard2.setJourney1(InvalidJourney);
+                    subCard2.setJourney2(InvalidJourney);
+                    subCard2.setJourney3(InvalidJourney);
+                    smartCard2 = subCard2;
+
+                    cardID = 0;
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID < 1) {
+                        System.out.print("Card 3's ID: ");
+                        cardID = keyboard.nextInt();
+                    }
+                    cardType = 'n';
+                    while (cardType != 'c' && cardType != 'a' && cardType != 's') {
+                        System.out.print("SmartCard 3's type: ");
+                        cardType = keyboard.next().charAt(0);
+                    }
+                    balance = -1;
+                    while (balance < 0) {
+                        System.out.print("Balance 3: ");
+                        balance = keyboard.nextDouble();
+                    }
+                    subCard3.setSmartCardID(cardID);
+                    subCard3.setType(cardType);
+                    subCard3.setBalance(balance);
+                    subCard3.setJourney1(InvalidJourney);
+                    subCard3.setJourney2(InvalidJourney);
+                    subCard3.setJourney3(InvalidJourney);
+                    smartCard3 = subCard3;
                     break;
                 default:
                     System.out.println("Invalid input.");
@@ -196,9 +230,13 @@ public class SystemInterface {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard1.setSmartCardID(cardID);
-                    smartCard1.setType(cardType);
-                    smartCard1.setBalance(balance);
+                    subCard1.setSmartCardID(cardID);
+                    subCard1.setType(cardType);
+                    subCard1.setBalance(balance);
+                    subCard1.setJourney1(InvalidJourney);
+                    subCard1.setJourney2(InvalidJourney);
+                    subCard1.setJourney3(InvalidJourney);
+                    smartCard1 = subCard1;
                     break;
                 case 2:
                     cardID = 0;
@@ -216,12 +254,16 @@ public class SystemInterface {
                         System.out.print("Balance 1: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard1.setSmartCardID(cardID);
-                    smartCard1.setType(cardType);
-                    smartCard1.setBalance(balance);
+                    subCard1.setSmartCardID(cardID);
+                    subCard1.setType(cardType);
+                    subCard1.setBalance(balance);
+                    subCard1.setJourney1(InvalidJourney);
+                    subCard1.setJourney2(InvalidJourney);
+                    subCard1.setJourney3(InvalidJourney);
+                    smartCard1 = subCard1;
 
                     cardID = 0;
-                    while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID > 1) {
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard3.getCardID() || cardID < 1) {
                         System.out.print("Card 2's ID: ");
                         cardID = keyboard.nextInt();
                     }
@@ -235,9 +277,13 @@ public class SystemInterface {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard2.setSmartCardID(cardID);
-                    smartCard2.setType(cardType);
-                    smartCard2.setBalance(balance);
+                    subCard2.setSmartCardID(cardID);
+                    subCard2.setType(cardType);
+                    subCard2.setBalance(balance);
+                    subCard2.setJourney1(InvalidJourney);
+                    subCard2.setJourney2(InvalidJourney);
+                    subCard2.setJourney3(InvalidJourney);
+                    smartCard2 = subCard2;
                     break;
                 default:
                     System.out.println("Invalid input.");
@@ -267,9 +313,13 @@ public class SystemInterface {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard1.setSmartCardID(cardID);
-                    smartCard1.setType(cardType);
-                    smartCard1.setBalance(balance);
+                    subCard1.setSmartCardID(cardID);
+                    subCard1.setType(cardType);
+                    subCard1.setBalance(balance);
+                    subCard1.setJourney1(InvalidJourney);
+                    subCard1.setJourney2(InvalidJourney);
+                    subCard1.setJourney3(InvalidJourney);
+                    smartCard1 = subCard1;
                     break;
                 case 2:
                     cardID = 0;
@@ -287,12 +337,16 @@ public class SystemInterface {
                         System.out.print("Balance 1: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard1.setSmartCardID(cardID);
-                    smartCard1.setType(cardType);
-                    smartCard1.setBalance(balance);
+                    subCard1.setSmartCardID(cardID);
+                    subCard1.setType(cardType);
+                    subCard1.setBalance(balance);
+                    subCard1.setJourney1(InvalidJourney);
+                    subCard1.setJourney2(InvalidJourney);
+                    subCard1.setJourney3(InvalidJourney);
+                    smartCard1 = subCard1;
 
                     cardID = 0;
-                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID > 1) {
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID < 1) {
                         System.out.print("Card 2's ID: ");
                         cardID = keyboard.nextInt();
                     }
@@ -306,9 +360,13 @@ public class SystemInterface {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard3.setSmartCardID(cardID);
-                    smartCard3.setType(cardType);
-                    smartCard3.setBalance(balance);
+                    subCard3.setSmartCardID(cardID);
+                    subCard3.setType(cardType);
+                    subCard3.setBalance(balance);
+                    subCard3.setJourney1(InvalidJourney);
+                    subCard3.setJourney2(InvalidJourney);
+                    subCard3.setJourney3(InvalidJourney);
+                    smartCard3 = subCard3;
                     break;
                 default:
                     System.out.println("Invalid input.");
@@ -338,9 +396,13 @@ public class SystemInterface {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard1.setSmartCardID(cardID);
-                    smartCard1.setType(cardType);
-                    smartCard1.setBalance(balance);
+                    subCard2.setSmartCardID(cardID);
+                    subCard2.setType(cardType);
+                    subCard2.setBalance(balance);
+                    subCard2.setJourney1(InvalidJourney);
+                    subCard2.setJourney2(InvalidJourney);
+                    subCard2.setJourney3(InvalidJourney);
+                    smartCard2 = subCard2;
                     break;
                 case 2:
                     cardID = 0;
@@ -358,12 +420,16 @@ public class SystemInterface {
                         System.out.print("Balance 1: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard2.setSmartCardID(cardID);
-                    smartCard2.setType(cardType);
-                    smartCard2.setBalance(balance);
+                    subCard2.setSmartCardID(cardID);
+                    subCard2.setType(cardType);
+                    subCard2.setBalance(balance);
+                    subCard2.setJourney1(InvalidJourney);
+                    subCard2.setJourney2(InvalidJourney);
+                    subCard2.setJourney3(InvalidJourney);
+                    smartCard2 = subCard2;
 
                     cardID = 0;
-                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID > 1) {
+                    while (cardID == smartCard1.getCardID() || cardID == smartCard2.getCardID() || cardID < 1) {
                         System.out.print("Card 2's ID: ");
                         cardID = keyboard.nextInt();
                     }
@@ -377,9 +443,13 @@ public class SystemInterface {
                         System.out.print("Balance 2: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard3.setSmartCardID(cardID);
-                    smartCard3.setType(cardType);
-                    smartCard3.setBalance(balance);
+                    subCard3.setSmartCardID(cardID);
+                    subCard3.setType(cardType);
+                    subCard3.setBalance(balance);
+                    subCard3.setJourney1(InvalidJourney);
+                    subCard3.setJourney2(InvalidJourney);
+                    subCard3.setJourney3(InvalidJourney);
+                    smartCard3 = subCard3;
                     break;
                 default:
                     System.out.println("Invalid input.");
@@ -409,9 +479,13 @@ public class SystemInterface {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard1.setSmartCardID(cardID);
-                    smartCard1.setType(cardType);
-                    smartCard1.setBalance(balance);
+                    subCard1.setSmartCardID(cardID);
+                    subCard1.setType(cardType);
+                    subCard1.setBalance(balance);
+                    subCard1.setJourney1(InvalidJourney);
+                    subCard1.setJourney2(InvalidJourney);
+                    subCard1.setJourney3(InvalidJourney);
+                    smartCard1 = subCard1;
                     break;
                 default:
                     System.out.println("Invalid input.");
@@ -441,9 +515,13 @@ public class SystemInterface {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard2.setSmartCardID(cardID);
-                    smartCard2.setType(cardType);
-                    smartCard2.setBalance(balance);
+                    subCard2.setSmartCardID(cardID);
+                    subCard2.setType(cardType);
+                    subCard2.setBalance(balance);
+                    subCard2.setJourney1(InvalidJourney);
+                    subCard2.setJourney2(InvalidJourney);
+                    subCard2.setJourney3(InvalidJourney);
+                    smartCard1 = subCard2;
                     break;
                 default:
                     System.out.println("Invalid input.");
@@ -473,9 +551,13 @@ public class SystemInterface {
                         System.out.print("Balance: ");
                         balance = keyboard.nextDouble();
                     }
-                    smartCard3.setSmartCardID(cardID);
-                    smartCard3.setType(cardType);
-                    smartCard3.setBalance(balance);
+                    subCard3.setSmartCardID(cardID);
+                    subCard3.setType(cardType);
+                    subCard3.setBalance(balance);
+                    subCard3.setJourney1(InvalidJourney);
+                    subCard3.setJourney2(InvalidJourney);
+                    subCard3.setJourney3(InvalidJourney);
+                    smartCard3 = subCard3;
                 default:
                     System.out.println("Invalid input.");
                     CardSetter(keyboard);
@@ -992,6 +1074,45 @@ public class SystemInterface {
         }
         System.out.println("There are no journeys on this card.");
         return card;
+    }
+
+    private void CardLister() {
+
+    }
+
+    private void JourneyLister() {
+
+    }
+
+    private void TransportModeFinder(String mode) {
+        if (smartCard1.getJourney1().getTransportMode().equals(mode)){
+            System.out.println("Journey " + smartCard1.getJourney1().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard1.getCardID() + ".");
+        }
+        if (smartCard1.getJourney2().getTransportMode().equals(mode)){
+            System.out.println("Journey " + smartCard1.getJourney2().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard1.getCardID() + ".");
+        }
+        if (smartCard1.getJourney3().getTransportMode().equals(mode)){
+            System.out.println("Journey " + smartCard1.getJourney3().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard1.getCardID() + ".");
+        }
+        if (smartCard2.getJourney1().getTransportMode().equals(mode)){
+            System.out.println("Journey " + smartCard2.getJourney1().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard2.getCardID() + ".");
+            System.out.println(smartCard2.getJourney1().getJourneyID() + smartCard2.getJourney2().getTransportMode());
+        }
+        if (smartCard2.getJourney2().getTransportMode().equals(mode)){
+            System.out.println("Journey " + smartCard2.getJourney2().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard2.getCardID() + ".");
+        }
+        if (smartCard2.getJourney3().getTransportMode().equals(mode)){
+            System.out.println("Journey " + smartCard2.getJourney3().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard2.getCardID() + ".");
+        }
+        if (smartCard3.getJourney1().getTransportMode().equals(mode)){
+            System.out.println("Journey " + smartCard3.getJourney1().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard3.getCardID() + ".");
+        }
+        if (smartCard3.getJourney2().getTransportMode().equals(mode)){
+            System.out.println("Journey " + smartCard3.getJourney2().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard3.getCardID() + ".");
+        }
+        if (smartCard3.getJourney3().getTransportMode().equals(mode)){
+            System.out.println("Journey " + smartCard3.getJourney3().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard3.getCardID() + ".");
+        }
     }
 
     public static void main(String[] args) {
