@@ -11,6 +11,7 @@ public class SystemInterface {
     // These are 2 invalid variables that are used in initialising and deleting.
     private final Journey InvalidJourney = new Journey();
     private final SmartCard InvalidCard = new SmartCard();
+    private boolean running = false;
 
     private void run() {
         // Sets up the properties for invalid variables
@@ -31,13 +32,12 @@ public class SystemInterface {
         smartCard2 = InvalidCard;
         smartCard3 = InvalidCard;
 
-
+        running = true;
+        System.out.println("Welcome to the SmartCard System!");
         Scanner keyboard = new Scanner(System.in);
-        CardSetter(keyboard);
-
-        smartCard1 = JourneySetter(smartCard1, keyboard);
-
-        TransportModeFinder("train");
+        while (running) {
+            FunctionSelector(keyboard);
+        }
     }
 
     private void CardSetter(Scanner keyboard) {
@@ -622,7 +622,7 @@ public class SystemInterface {
                     subCard2.setJourney1(InvalidJourney);
                     subCard2.setJourney2(InvalidJourney);
                     subCard2.setJourney3(InvalidJourney);
-                    smartCard1 = subCard2;
+                    smartCard2 = subCard2;
                     break;
                 default:
                     System.out.println("Invalid input.");
@@ -1246,93 +1246,93 @@ public class SystemInterface {
             num3 = 0;
         }
         if (sC1jID1 != 0 && sC1jID2 != 0 && sC1jID3 != 0) {
-            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + " journeys.");
             System.out.println("Journey " + sC1jID1 + " has transport mode " + smartCard1.getJourney1().getTransportMode() + ".");
             System.out.println("Journey " + sC1jID2 + " has transport mode " + smartCard1.getJourney2().getTransportMode() + ".");
             System.out.println("Journey " + sC1jID3 + " has transport mode " + smartCard1.getJourney3().getTransportMode() + ".");
         } else if (sC1jID1 != 0 && sC1jID2 != 0) {
-            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + " journeys.");
             System.out.println("Journey " + sC1jID1 + " has transport mode " + smartCard1.getJourney1().getTransportMode() + ".");
             System.out.println("Journey " + sC1jID2 + " has transport mode " + smartCard1.getJourney2().getTransportMode() + ".");
         } else if (sC1jID1 != 0  && sC1jID3 != 0) {
-            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + " journeys.");
             System.out.println("Journey " + sC1jID1 + " has transport mode " + smartCard1.getJourney1().getTransportMode() + ".");
             System.out.println("Journey " + sC1jID3 + " has transport mode " + smartCard1.getJourney3().getTransportMode() + ".");
         } else if (sC1jID2 != 0 && sC1jID3 != 0) {
-            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + " journeys.");
             System.out.println("Journey " + sC1jID2 + " has transport mode " + smartCard1.getJourney2().getTransportMode() + ".");
             System.out.println("Journey " + sC1jID3 + " has transport mode " + smartCard1.getJourney3().getTransportMode() + ".");
         } else if (sC1jID1 != 0) {
-            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journey.");
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + " journey.");
             System.out.println("Journey " + sC1jID1 + " has transport mode " + smartCard1.getJourney1().getTransportMode() + ".");
         } else if (sC1jID2 != 0) {
-            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journey.");
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + " journey.");
             System.out.println("Journey " + sC1jID2 + " has transport mode " + smartCard1.getJourney2().getTransportMode() + ".");
         } else if (sC1jID3 != 0) {
-            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journey.");
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + " journey.");
             System.out.println("Journey " + sC1jID3 + " has transport mode " + smartCard1.getJourney3().getTransportMode() + ".");
         } else if (smartCard1 != InvalidCard) {
-            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + "journeys.");
+            System.out.println("Smartcard " + smartCard1.getCardID() + " has type " + smartCard1.getType() + " and " + num1 + " journeys.");
         }
 
         if (sC2jID1 != 0 && sC2jID2 != 0 && sC2jID3 != 0) {
-            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + " journeys.");
             System.out.println("Journey " + sC2jID1 + " has transport mode " + smartCard2.getJourney1().getTransportMode() + ".");
             System.out.println("Journey " + sC2jID2 + " has transport mode " + smartCard2.getJourney2().getTransportMode() + ".");
             System.out.println("Journey " + sC2jID3 + " has transport mode " + smartCard2.getJourney3().getTransportMode() + ".");
         } else if (sC2jID1 != 0 && sC2jID2 != 0) {
-            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + " journeys.");
             System.out.println("Journey " + sC2jID1 + " has transport mode " + smartCard2.getJourney1().getTransportMode() + ".");
             System.out.println("Journey " + sC2jID2 + " has transport mode " + smartCard2.getJourney2().getTransportMode() + ".");
         } else if (sC2jID1 != 0  && sC2jID3 != 0) {
-            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + " journeys.");
             System.out.println("Journey " + sC2jID1 + " has transport mode " + smartCard2.getJourney1().getTransportMode() + ".");
             System.out.println("Journey " + sC2jID3 + " has transport mode " + smartCard2.getJourney3().getTransportMode() + ".");
         } else if (sC2jID2 != 0 && sC2jID3 != 0) {
-            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + " journeys.");
             System.out.println("Journey " + sC2jID2 + " has transport mode " + smartCard2.getJourney2().getTransportMode() + ".");
             System.out.println("Journey " + sC2jID3 + " has transport mode " + smartCard2.getJourney3().getTransportMode() + ".");
         } else if (sC2jID1 != 0) {
-            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journey.");
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + " journey.");
             System.out.println("Journey " + sC2jID1 + " has transport mode " + smartCard2.getJourney1().getTransportMode() + ".");
         } else if (sC2jID2 != 0) {
-            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journey.");
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + " journey.");
             System.out.println("Journey " + sC2jID2 + " has transport mode " + smartCard2.getJourney2().getTransportMode() + ".");
         } else if (sC2jID3 != 0) {
-            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journey.");
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + " journey.");
             System.out.println("Journey " + sC2jID3 + " has transport mode " + smartCard2.getJourney3().getTransportMode() + ".");
         } else if (smartCard2 != InvalidCard) {
-            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + "journeys.");
+            System.out.println("Smartcard " + smartCard2.getCardID() + " has type " + smartCard2.getType() + " and " + num2 + " journeys.");
         }
 
         if (sC3jID1 != 0 && sC3jID2 != 0 && sC3jID3 != 0) {
-            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + " journeys.");
             System.out.println("Journey " + sC3jID1 + " has transport mode " + smartCard3.getJourney1().getTransportMode() + ".");
             System.out.println("Journey " + sC3jID2 + " has transport mode " + smartCard3.getJourney2().getTransportMode() + ".");
             System.out.println("Journey " + sC3jID3 + " has transport mode " + smartCard3.getJourney3().getTransportMode() + ".");
         } else if (sC3jID1 != 0 && sC3jID2 != 0) {
-            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + " journeys.");
             System.out.println("Journey " + sC3jID1 + " has transport mode " + smartCard3.getJourney1().getTransportMode() + ".");
             System.out.println("Journey " + sC3jID2 + " has transport mode " + smartCard3.getJourney2().getTransportMode() + ".");
         } else if (sC3jID1 != 0  && sC3jID3 != 0) {
-            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + " journeys.");
             System.out.println("Journey " + sC3jID1 + " has transport mode " + smartCard3.getJourney1().getTransportMode() + ".");
             System.out.println("Journey " + sC3jID3 + " has transport mode " + smartCard3.getJourney3().getTransportMode() + ".");
         } else if (sC3jID2 != 0 && sC3jID3 != 0) {
-            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + " journeys.");
             System.out.println("Journey " + sC3jID2 + " has transport mode " + smartCard3.getJourney2().getTransportMode() + ".");
             System.out.println("Journey " + sC3jID3 + " has transport mode " + smartCard3.getJourney3().getTransportMode() + ".");
         } else if (sC3jID1 != 0) {
-            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journey.");
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + " journey.");
             System.out.println("Journey " + sC3jID1 + " has transport mode " + smartCard3.getJourney1().getTransportMode() + ".");
         } else if (sC3jID2 != 0) {
-            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journey.");
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + " journey.");
             System.out.println("Journey " + sC3jID2 + " has transport mode " + smartCard3.getJourney2().getTransportMode() + ".");
         } else if (sC3jID3 != 0) {
-            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num1 + "journey.");
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num1 + " journey.");
             System.out.println("Journey " + sC3jID3 + " has transport mode " + smartCard3.getJourney3().getTransportMode() + ".");
         } else if (smartCard3 != InvalidCard) {
-            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + "journeys.");
+            System.out.println("Smartcard " + smartCard3.getCardID() + " has type " + smartCard3.getType() + " and " + num3 + " journeys.");
         }
 
     }
@@ -1407,38 +1407,153 @@ public class SystemInterface {
         }
     }
 
-
-    public void CardSetter(Scanner keyboard) {
-        int numberOfCards;
-        SmartCard sc1 = new SmartCard();
-        SmartCard sc2 = new SmartCard();
-        SmartCard sc3 = new SmartCard();
-        System.out.print("How many cards would you like to add?");
-        System.out.print("Input a number of cards between 0 to 3");
-        numberOfCards = keyboard.nextInt();
-        for (int i = 1; i <= numberOfCards; i++) {
-            System.out.print("Card" + i + "type: ");
-            char type = keyboard.next();
-            if (type = "c") {
-
-            }
-            else if (type = "a") {
-
-            }
-            else if (type = "S") {
-
-            }
-            else {
-                System.out.print("Invalid card type, please try again");
-
-            }
+    private void FunctionSelector(Scanner keyboard) {
+        String mode;
+        int cardJourneySet = 0;
+        System.out.println("Options:");
+        System.out.println("(1) Set SmartCards");
+        System.out.println("(2) Set Journeys");
+        System.out.println("(3) Delete SmartCard");
+        System.out.println("(4) Delete Journey");
+        System.out.println("(5) List SmartCards");
+        System.out.println("(6) List Journeys");
+        System.out.println("(7) Find Journeys with specific transport type");
+        System.out.println("(8) ");
+        System.out.println("(9) Exit.");
+        System.out.print("What would you like to do (1-9)? ");
+        int choice = keyboard.nextInt();
+        switch (choice) {
+            case 1:
+                CardSetter(keyboard);
+                break;
+            case 2:
+                if (smartCard1 != InvalidCard && smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
+                    while (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to set journeys on are: " + smartCard1.getCardID() + ", " + smartCard2.getCardID() + " and " + smartCard3.getCardID() + ".");
+                        System.out.print("Which card would you like to set journeys on?");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard1.getCardID()) {
+                        smartCard1 = JourneySetter(smartCard1, keyboard);
+                    } else if (cardJourneySet == smartCard2.getCardID()) {
+                        smartCard2 = JourneySetter(smartCard2, keyboard);
+                    } else if (cardJourneySet == smartCard3.getCardID()) {
+                        smartCard3 = JourneySetter(smartCard3, keyboard);
+                    }
+                } else if (smartCard1 != InvalidCard && smartCard2 != InvalidCard) {
+                    while (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to set journeys on are: " + smartCard1.getCardID() + " and " + smartCard2.getCardID() + ".");
+                        System.out.print("Which card would you like to set journeys on?");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard1.getCardID()) {
+                        smartCard1 = JourneySetter(smartCard1, keyboard);
+                    } else if (cardJourneySet == smartCard2.getCardID()) {
+                        smartCard2 = JourneySetter(smartCard2, keyboard);
+                    }
+                } else if (smartCard1 != InvalidCard && smartCard3 != InvalidCard) {
+                    while (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to set journeys on are: " + smartCard1.getCardID() + " and " + smartCard3.getCardID() + ".");
+                        System.out.print("Which card would you like to set journeys on?");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard1.getCardID()) {
+                        smartCard1 = JourneySetter(smartCard1, keyboard);
+                    } else if (cardJourneySet == smartCard3.getCardID()) {
+                        smartCard3 = JourneySetter(smartCard3, keyboard);
+                    }
+                } else if (smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
+                    while (cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to set journeys on are: " + smartCard2.getCardID() + " and " + smartCard3.getCardID() + ".");
+                        System.out.print("Which card would you like to set journeys on?");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard2.getCardID()) {
+                        smartCard2 = JourneySetter(smartCard2, keyboard);
+                    } else if (cardJourneySet == smartCard3.getCardID()) {
+                        smartCard3 = JourneySetter(smartCard3, keyboard);
+                    }
+                } else if (smartCard1 != InvalidCard) {
+                    while (cardJourneySet != smartCard1.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to set journeys on are: " + smartCard1.getCardID() + ".");
+                        System.out.print("Which card would you like to set journeys on?");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard1.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard1.getCardID()) {
+                        smartCard1 = JourneySetter(smartCard1, keyboard);
+                    }
+                } else if (smartCard2 != InvalidCard) {
+                    while (cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to set journeys on are: " + smartCard2.getCardID() + ".");
+                        System.out.print("Which card would you like to set journeys on?");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard2.getCardID()) {
+                        smartCard2 = JourneySetter(smartCard2, keyboard);
+                    }
+                } else if (smartCard3 != InvalidCard) {
+                    while (cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to set journeys on are: " + smartCard3.getCardID() + ".");
+                        System.out.print("Which card would you like to set journeys on?");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard3.getCardID()) {
+                        smartCard3 = JourneySetter(smartCard3, keyboard);
+                    }
+                } else {
+                    System.out.println("There are no cards to set journeys on.");
+                }
+                break;
+            case 3:
+                CardDeleter(keyboard);
+                break;
+            case 4:
+                break;
+            case 5:
+                CardLister();
+                break;
+            case 6:
+                JourneyLister();
+                break;
+            case 7:
+                System.out.print("What transport mode would you like to know about? ");
+                mode = keyboard.next();
+                TransportModeFinder(mode);
+                break;
+            case 8:
+                break;
+            case 9:
+                running = false;
+                break;
+            default:
+                System.out.println("Not a valid input.");
+                break;
         }
     }
-
 
     public static void main(String[] args) {
         SystemInterface systemUI = new SystemInterface();
         systemUI.run();
     }
 }
-
