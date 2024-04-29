@@ -2565,6 +2565,7 @@ public class SystemInterface {
                         System.out.println("    Total cost of bus journeys is $" + card3BusTotal);
                     }
                 }
+                System.out.println("---------------------------------------------------------");
             }
         } else if (smartCard1 != InvalidCard && smartCard2 != InvalidCard) {
             double TrainTotal ;
@@ -2740,6 +2741,7 @@ public class SystemInterface {
                         System.out.println("    Total cost of bus journeys is $" + card2BusTotal);
                     }
                 }
+                System.out.println("---------------------------------------------------------");
             }
         } else if (smartCard1 != InvalidCard && smartCard3 != InvalidCard) {
             double TrainTotal ;
@@ -2915,6 +2917,7 @@ public class SystemInterface {
                         System.out.println("    Total cost of bus journeys is $" + card3BusTotal);
                     }
                 }
+                System.out.println("---------------------------------------------------------");
             }
         } else if (smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
             double TrainTotal ;
@@ -3090,6 +3093,7 @@ public class SystemInterface {
                         System.out.println("    Total cost of bus journeys is $" + card3BusTotal);
                     }
                 }
+                System.out.println("---------------------------------------------------------");
             }
         } else if (smartCard1 != InvalidCard) {
             double card1TrainTotal = 0;
@@ -3183,8 +3187,8 @@ public class SystemInterface {
                 if (card1BusTotal != 0) {
                     System.out.println("    Total cost of bus journeys is $" + card1BusTotal);
                 }
+                System.out.println("---------------------------------------------------------");
             }
-
         } else if (smartCard2 != InvalidCard) {
             double card2TrainTotal = 0;
             double card2TramTotal = 0;
@@ -3277,6 +3281,7 @@ public class SystemInterface {
                 if (card2BusTotal != 0) {
                     System.out.println("    Total cost of bus journeys is $" + card2BusTotal);
                 }
+                System.out.println("---------------------------------------------------------");
             }
         } else if (smartCard3 != InvalidCard) {
             double card3TrainTotal = 0;
@@ -3370,6 +3375,7 @@ public class SystemInterface {
                 if (card3BusTotal != 0) {
                     System.out.println("    Total cost of bus journeys is $" + card3BusTotal);
                 }
+                System.out.println("---------------------------------------------------------");
             }
         } else {
             System.out.println("No Journeys are being completed yet.");
