@@ -35,11 +35,13 @@ public class SystemInterface {
         running = true;
         System.out.println("Welcome to the SmartCard System!");
         Scanner keyboard = new Scanner(System.in);
+        // Sets up the loop to keep the function running until requested to end.
         while (running) {
             FunctionSelector(keyboard);
         }
     }
 
+    // This function allows users to set up SmartCards. It contains a large amount of logic to ensure that any already used SmartCard is not overwritten.
     private void CardSetter(Scanner keyboard) {
         int C1 = smartCard1.getCardID();
         int C2 = smartCard2.getCardID();
@@ -678,320 +680,1227 @@ public class SystemInterface {
     private SmartCard JourneySetter(SmartCard card, Scanner keyboard) {
         SmartCard subCard = card;
         if (card.getType() == 'c') {
-            System.out.println("You can set 1 Journey on this card.");
-            System.out.print("How many journeys would you like to set? ");
-            int numJourneys = keyboard.nextInt();
-            if (numJourneys == 1) {
-                int JourneyID = 0;
-                while (JourneyID < 1) {
-                    System.out.print("Journey ID? ");
-                    JourneyID = keyboard.nextInt();
+            if (card.getJourney1() == InvalidJourney) {
+                System.out.println("You can set 1 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1) {
+                    System.out.print("How many journeys would you like to set (0-1)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1) {
+                        System.out.println("Please input a valid selection.");
+                    }
                 }
-                String transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey's transport mode? ");
-                    transportMode = keyboard.next();
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j1 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        /* For the line below, I am unsure if you want us to make sure the stations aren't the same,
+                        obviously round trips can exist, but this seems on in this case because everything else we
+                        have done has been strictly linear, furthermore, if we didn't actually go anywhere, we just
+                        charge someone for standing there which is not something we should do.*/
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            // I'm not sure if this is required, I'm going to leave it in, however it could be commented out.
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+                        return subCard;
                 }
-                int start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey? (1,10) ");
-                    start = keyboard.nextInt();
-                }
-                int end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey? (1,10) ");
-                    end = keyboard.nextInt();
-                }
-                Journey j = new Journey();
-                j.setJourneyID(JourneyID);
-                j.setTransportMode(transportMode);
-                j.setStartOfJourney(start);
-                j.setEndOfJourney(end);
-                j.setDistanceOfJourney();
-                subCard.setJourney1(j);
-                return subCard;
-            } else if (numJourneys == 0) {
-                return subCard;
             } else {
-                return JourneySetter(card, keyboard);
+                System.out.println("The max amount of Journeys are already set on this SmartCard.");
+                return card;
             }
-
         } else if (card.getType() == 'a') {
-            System.out.println("You can set 2 Journeys on this card.");
-            System.out.print("How many journeys would you like to set? ");
-            int numJourneys = keyboard.nextInt();
-            if (numJourneys == 2) {
-                int JourneyID = 0;
-                while (JourneyID < 1) {
-                    System.out.print("Journey 1 ID? ");
-                    JourneyID = keyboard.nextInt();
+            if (card.getJourney1() == InvalidJourney && card.getJourney2() == InvalidJourney) {
+                System.out.println("You can set 2 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1 && numJourneys != 2) {
+                    System.out.print("How many journeys would you like to set (0-2)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1 && numJourneys != 2) {
+                        System.out.println("Please input a valid selection.");
+                    }
                 }
-                String transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey 1's transport mode? ");
-                    transportMode = keyboard.next();
-                }
-                int start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey 1? (1,10) ");
-                    start = keyboard.nextInt();
-                }
-                int end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey 1? (1,10) ");
-                    end = keyboard.nextInt();
-                }
-                Journey i = new Journey();
-                i.setJourneyID(JourneyID);
-                i.setTransportMode(transportMode);
-                i.setStartOfJourney(start);
-                i.setEndOfJourney(end);
-                i.setDistanceOfJourney();
-                subCard.setJourney1(i);
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j1 = new Journey();
+                Journey j2 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+                        return subCard;
+                    case 3:
+                        while (journeyID < 1) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
 
-                JourneyID = 0;
-                while (JourneyID < 1 || JourneyID == subCard.getJourney1().getJourneyID()) {
-                    System.out.print("Journey 2 ID? ");
-                    JourneyID = keyboard.nextInt();
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+
+                        journeyID = 0;
+                        transportMode = "";
+                        startOfJourney = 0;
+                        endOfJourney = 0;
+                        while (journeyID < 1 || journeyID == j1.getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == j1.getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j2.setJourneyID(journeyID);
+                        j2.setTransportMode(transportMode);
+                        j2.setStartOfJourney(startOfJourney);
+                        j2.setEndOfJourney(endOfJourney);
+                        j2.setDistanceOfJourney();
+                        subCard.setJourney2(j2);
+                        return subCard;
                 }
-                transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey 2's transport mode? ");
-                    transportMode = keyboard.next();
+            } else if (card.getJourney1() == InvalidJourney) {
+                System.out.println("You can set 1 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1) {
+                    System.out.print("How many journeys would you like to set (0-1)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1) {
+                        System.out.println("Please input a valid selection.");
+                    }
                 }
-                start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey 2? (1,10) ");
-                    start = keyboard.nextInt();
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j1 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1 || journeyID == card.getJourney2().getJourneyID()) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney2().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+                        return subCard;
                 }
-                end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey 2? (1,10) ");
-                    end = keyboard.nextInt();
+            } else if (card.getJourney2() == InvalidJourney) {
+                System.out.println("You can set 1 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1) {
+                    System.out.print("How many journeys would you like to set (0-1)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1) {
+                        System.out.println("Please input a valid selection.");
+                    }
                 }
-                Journey j = new Journey();
-                j.setJourneyID(JourneyID);
-                j.setTransportMode(transportMode);
-                j.setStartOfJourney(start);
-                j.setEndOfJourney(end);
-                j.setDistanceOfJourney();
-                subCard.setJourney2(j);
-                return subCard;
-            } else if (numJourneys == 1) {
-                int JourneyID = 0;
-                while (JourneyID < 1) {
-                    System.out.print("Journey ID? ");
-                    JourneyID = keyboard.nextInt();
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j2 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1 || journeyID == card.getJourney1().getJourneyID()) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney1().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j2.setJourneyID(journeyID);
+                        j2.setTransportMode(transportMode);
+                        j2.setStartOfJourney(startOfJourney);
+                        j2.setEndOfJourney(endOfJourney);
+                        j2.setDistanceOfJourney();
+                        subCard.setJourney2(j2);
+                        return subCard;
                 }
-                String transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey's transport mode? ");
-                    transportMode = keyboard.next();
-                }
-                int start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey? (1,10) ");
-                    start = keyboard.nextInt();
-                }
-                int end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey? (1,10) ");
-                    end = keyboard.nextInt();
-                }
-                Journey j = new Journey();
-                j.setJourneyID(JourneyID);
-                j.setTransportMode(transportMode);
-                j.setStartOfJourney(start);
-                j.setEndOfJourney(end);
-                j.setDistanceOfJourney();
-                subCard.setJourney1(j);
-                return subCard;
-            } else if (numJourneys == 0) {
-                return subCard;
             } else {
-                return JourneySetter(card, keyboard);
+                System.out.println("The max amount of Journeys are already set on this SmartCard.");
+                return card;
             }
-        } else {
-            System.out.println("You can set 3 journeys on this card.");
-            System.out.print("How many journeys would you like to set?");
-            int numJourneys = keyboard.nextInt();
-            if (numJourneys == 3) {
-                int JourneyID = 0;
-                while (JourneyID < 1) {
-                    System.out.print("Journey 1 ID? ");
-                    JourneyID = keyboard.nextInt();
+        } else if (card.getType() == 's') {
+            if (card.getJourney1() == InvalidJourney && card.getJourney2() == InvalidJourney && card.getJourney3() == InvalidJourney) {
+                System.out.println("You can set 3 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1 && numJourneys != 2 && numJourneys != 3) {
+                    System.out.print("How many journeys would you like to set (0-3)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1 && numJourneys != 2 && numJourneys != 3) {
+                        System.out.println("Please input a valid selection.");
+                    }
                 }
-                String transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey 1's transport mode? ");
-                    transportMode = keyboard.next();
-                }
-                int start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey 1? (1,10) ");
-                    start = keyboard.nextInt();
-                }
-                int end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey 1? (1,10) ");
-                    end = keyboard.nextInt();
-                }
-                Journey i = new Journey();
-                i.setJourneyID(JourneyID);
-                i.setTransportMode(transportMode);
-                i.setStartOfJourney(start);
-                i.setEndOfJourney(end);
-                i.setDistanceOfJourney();
-                subCard.setJourney1(i);
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j1 = new Journey();
+                Journey j2 = new Journey();
+                Journey j3 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+                        return subCard;
+                    case 3:
+                        while (journeyID < 1) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
 
-                JourneyID = 0;
-                while (JourneyID < 1 || JourneyID == subCard.getJourney1().getJourneyID()) {
-                    System.out.print("Journey 2 ID? ");
-                    JourneyID = keyboard.nextInt();
-                }
-                transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey 2's transport mode? ");
-                    transportMode = keyboard.next();
-                }
-                start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey 2? (1,10) ");
-                    start = keyboard.nextInt();
-                }
-                end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey 2? (1,10) ");
-                    end = keyboard.nextInt();
-                }
-                Journey j = new Journey();
-                j.setJourneyID(JourneyID);
-                j.setTransportMode(transportMode);
-                j.setStartOfJourney(start);
-                j.setEndOfJourney(end);
-                j.setDistanceOfJourney();
-                subCard.setJourney2(j);
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
 
-                JourneyID = 0;
-                while (JourneyID < 1 || JourneyID == subCard.getJourney1().getJourneyID() || JourneyID == subCard.getJourney2().getJourneyID()) {
-                    System.out.print("Journey 3 ID? ");
-                    JourneyID = keyboard.nextInt();
-                }
-                transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey 3's transport mode? ");
-                    transportMode = keyboard.next();
-                }
-                start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey 3? (1,10) ");
-                    start = keyboard.nextInt();
-                }
-                end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey 3? (1,10) ");
-                    end = keyboard.nextInt();
-                }
-                Journey k = new Journey();
-                k.setJourneyID(JourneyID);
-                k.setTransportMode(transportMode);
-                k.setStartOfJourney(start);
-                k.setEndOfJourney(end);
-                k.setDistanceOfJourney();
-                subCard.setJourney3(k);
-                return subCard;
-            } else if (numJourneys == 2) {
-                int JourneyID = 0;
-                while (JourneyID < 1) {
-                    System.out.print("Journey 1 ID? ");
-                    JourneyID = keyboard.nextInt();
-                }
-                String transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey 1's transport mode? ");
-                    transportMode = keyboard.next();
-                }
-                int start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey 1? (1,10) ");
-                    start = keyboard.nextInt();
-                }
-                int end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey 1? (1,10) ");
-                    end = keyboard.nextInt();
-                }
-                Journey i = new Journey();
-                i.setJourneyID(JourneyID);
-                i.setTransportMode(transportMode);
-                i.setStartOfJourney(start);
-                i.setEndOfJourney(end);
-                i.setDistanceOfJourney();
-                subCard.setJourney1(i);
+                        journeyID = 0;
+                        transportMode = "";
+                        startOfJourney = 0;
+                        endOfJourney = 0;
+                        while (journeyID < 1 || journeyID == j1.getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == j1.getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j2.setJourneyID(journeyID);
+                        j2.setTransportMode(transportMode);
+                        j2.setStartOfJourney(startOfJourney);
+                        j2.setEndOfJourney(endOfJourney);
+                        j2.setDistanceOfJourney();
+                        subCard.setJourney2(j2);
+                        return subCard;
+                    case 4:
+                        while (journeyID < 1) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
 
-                JourneyID = 0;
-                while (JourneyID < 1 || JourneyID == subCard.getJourney1().getJourneyID()) {
-                    System.out.print("Journey 2 ID? ");
-                    JourneyID = keyboard.nextInt();
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+
+                        journeyID = 0;
+                        transportMode = "";
+                        startOfJourney = 0;
+                        endOfJourney = 0;
+                        while (journeyID < 1 || journeyID == j1.getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == j1.getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j2.setJourneyID(journeyID);
+                        j2.setTransportMode(transportMode);
+                        j2.setStartOfJourney(startOfJourney);
+                        j2.setEndOfJourney(endOfJourney);
+                        j2.setDistanceOfJourney();
+                        subCard.setJourney2(j2);
+                        journeyID = 0;
+                        transportMode = "";
+                        startOfJourney = 0;
+                        endOfJourney = 0;
+                        while (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == j2.getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == j2.getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j3.setJourneyID(journeyID);
+                        j3.setTransportMode(transportMode);
+                        j3.setStartOfJourney(startOfJourney);
+                        j3.setEndOfJourney(endOfJourney);
+                        j3.setDistanceOfJourney();
+                        subCard.setJourney3(j3);
+                        return subCard;
                 }
-                transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey 2's transport mode? ");
-                    transportMode = keyboard.next();
+            } else if (card.getJourney1() == InvalidJourney && card.getJourney2() == InvalidJourney) {
+                System.out.println("You can set 2 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1 && numJourneys != 2) {
+                    System.out.print("How many journeys would you like to set (0-2)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1 && numJourneys != 2) {
+                        System.out.println("Please input a valid selection.");
+                    }
                 }
-                start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey 2? (1,10) ");
-                    start = keyboard.nextInt();
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j1 = new Journey();
+                Journey j2 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1 || journeyID == card.getJourney3().getJourneyID()) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney3().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+                        return subCard;
+                    case 3:
+                        while (journeyID < 1 || journeyID == card.getJourney3().getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney3().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+
+                        journeyID = 0;
+                        transportMode = "";
+                        startOfJourney = 0;
+                        endOfJourney = 0;
+                        while (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == card.getJourney3().getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == card.getJourney3().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j2.setJourneyID(journeyID);
+                        j2.setTransportMode(transportMode);
+                        j2.setStartOfJourney(startOfJourney);
+                        j2.setEndOfJourney(endOfJourney);
+                        j2.setDistanceOfJourney();
+                        subCard.setJourney2(j2);
+                        return subCard;
                 }
-                end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey 2? (1,10) ");
-                    end = keyboard.nextInt();
+            } else if (card.getJourney1() == InvalidJourney && card.getJourney3() == InvalidJourney) {
+                System.out.println("You can set 2 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1 && numJourneys != 2) {
+                    System.out.print("How many journeys would you like to set (0-2)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1 && numJourneys != 2) {
+                        System.out.println("Please input a valid selection.");
+                    }
                 }
-                Journey j = new Journey();
-                j.setJourneyID(JourneyID);
-                j.setTransportMode(transportMode);
-                j.setStartOfJourney(start);
-                j.setEndOfJourney(end);
-                j.setDistanceOfJourney();
-                subCard.setJourney2(j);
-                return subCard;
-            } else if (numJourneys == 1) {
-                int JourneyID = 0;
-                while (JourneyID < 1) {
-                    System.out.print("Journey ID? ");
-                    JourneyID = keyboard.nextInt();
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j1 = new Journey();
+                Journey j3 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1 || journeyID == card.getJourney2().getJourneyID()) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney2().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+                        return subCard;
+                    case 3:
+                        while (journeyID < 1 || journeyID == card.getJourney2().getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney2().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+
+                        journeyID = 0;
+                        transportMode = "";
+                        startOfJourney = 0;
+                        endOfJourney = 0;
+                        while (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == card.getJourney2().getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == card.getJourney2().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j3.setJourneyID(journeyID);
+                        j3.setTransportMode(transportMode);
+                        j3.setStartOfJourney(startOfJourney);
+                        j3.setEndOfJourney(endOfJourney);
+                        j3.setDistanceOfJourney();
+                        subCard.setJourney3(j3);
+                        return subCard;
                 }
-                String transportMode = " ";
-                while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                    System.out.print("Journey's transport mode? ");
-                    transportMode = keyboard.next();
+            } else if (card.getJourney2() == InvalidJourney && card.getJourney3() == InvalidJourney) {
+                System.out.println("You can set 2 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1 && numJourneys != 2) {
+                    System.out.print("How many journeys would you like to set (0-2)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1 && numJourneys != 2) {
+                        System.out.println("Please input a valid selection.");
+                    }
                 }
-                int start = 0;
-                while (start < 1 || start > 10) {
-                    System.out.print("Starting point for journey? (1,10) ");
-                    start = keyboard.nextInt();
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j2 = new Journey();
+                Journey j3 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1 || journeyID == card.getJourney1().getJourneyID()) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney1().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j2.setJourneyID(journeyID);
+                        j2.setTransportMode(transportMode);
+                        j2.setStartOfJourney(startOfJourney);
+                        j2.setEndOfJourney(endOfJourney);
+                        j2.setDistanceOfJourney();
+                        subCard.setJourney2(j2);
+                        return subCard;
+                    case 3:
+                        while (journeyID < 1 || journeyID == card.getJourney1().getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney1().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+
+                        j2.setJourneyID(journeyID);
+                        j2.setTransportMode(transportMode);
+                        j2.setStartOfJourney(startOfJourney);
+                        j2.setEndOfJourney(endOfJourney);
+                        j2.setDistanceOfJourney();
+                        subCard.setJourney2(j2);
+
+                        journeyID = 0;
+                        transportMode = "";
+                        startOfJourney = 0;
+                        endOfJourney = 0;
+                        while (journeyID < 1 || journeyID == j2.getJourneyID() || journeyID == card.getJourney1().getJourneyID()) {
+                            System.out.print("Journey 1's ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == j2.getJourneyID() || journeyID == card.getJourney1().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode 1: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey 1 (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey 1 (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j3.setJourneyID(journeyID);
+                        j3.setTransportMode(transportMode);
+                        j3.setStartOfJourney(startOfJourney);
+                        j3.setEndOfJourney(endOfJourney);
+                        j3.setDistanceOfJourney();
+                        subCard.setJourney3(j3);
+                        return subCard;
                 }
-                int end = 0;
-                while (end < 1 || end > 10) {
-                    System.out.print("Ending point for journey? (1,10) ");
-                    end = keyboard.nextInt();
+            } else if (card.getJourney1() == InvalidJourney) {
+                System.out.println("You can set 1 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1) {
+                    System.out.print("How many journeys would you like to set (0-1)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1) {
+                        System.out.println("Please input a valid selection.");
+                    }
                 }
-                Journey j = new Journey();
-                j.setJourneyID(JourneyID);
-                j.setTransportMode(transportMode);
-                j.setStartOfJourney(start);
-                j.setEndOfJourney(end);
-                j.setDistanceOfJourney();
-                subCard.setJourney1(j);
-                return subCard;
-            } else if (numJourneys == 0) {
-                return subCard;
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j1 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1 || journeyID == card.getJourney2().getJourneyID() || journeyID == card.getJourney3().getJourneyID()) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney2().getJourneyID() || journeyID == card.getJourney3().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j1.setJourneyID(journeyID);
+                        j1.setTransportMode(transportMode);
+                        j1.setStartOfJourney(startOfJourney);
+                        j1.setEndOfJourney(endOfJourney);
+                        j1.setDistanceOfJourney();
+                        subCard.setJourney1(j1);
+                        return subCard;
+                }
+            } else if (card.getJourney2() == InvalidJourney) {
+                System.out.println("You can set 1 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1) {
+                    System.out.print("How many journeys would you like to set (0-1)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1) {
+                        System.out.println("Please input a valid selection.");
+                    }
+                }
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j2 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1 || journeyID == card.getJourney1().getJourneyID() || journeyID == card.getJourney3().getJourneyID()) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney1().getJourneyID() || journeyID == card.getJourney3().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j2.setJourneyID(journeyID);
+                        j2.setTransportMode(transportMode);
+                        j2.setStartOfJourney(startOfJourney);
+                        j2.setEndOfJourney(endOfJourney);
+                        j2.setDistanceOfJourney();
+                        subCard.setJourney2(j2);
+                        return subCard;
+                }
+            } else if (card.getJourney3() == InvalidJourney) {
+                System.out.println("You can set 1 journey on this card.");
+                int numJourneys = -1;
+                while (numJourneys != 0 && numJourneys != 1) {
+                    System.out.print("How many journeys would you like to set (0-1)? ");
+                    numJourneys = keyboard.nextInt();
+                    if (numJourneys != 0 && numJourneys != 1) {
+                        System.out.println("Please input a valid selection.");
+                    }
+                }
+                numJourneys++;
+                int journeyID = 0;
+                String transportMode = "";
+                int startOfJourney = 0;
+                int endOfJourney = 0;
+                Journey j3 = new Journey();
+                switch (numJourneys) {
+                    case 1:
+                        System.out.println("No Journeys were set.");
+                        return card;
+                    case 2:
+                        while (journeyID < 1 || journeyID == card.getJourney1().getJourneyID() || journeyID == card.getJourney2().getJourneyID()) {
+                            System.out.print("Journey ID: ");
+                            journeyID = keyboard.nextInt();
+                            if (journeyID < 1 || journeyID == card.getJourney1().getJourneyID() || journeyID == card.getJourney2().getJourneyID()) {
+                                System.out.println("Please input a unique ID greater than 0.");
+                            }
+                        }
+                        while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                            System.out.print("Transport mode: ");
+                            transportMode = keyboard.next().toLowerCase();
+                            if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
+                                System.out.println("Please input a valid transport mode (train, tram or bus).");
+                            }
+                        }
+                        while (startOfJourney < 1 || startOfJourney > 10) {
+                            System.out.print("Starting point for journey (1-10): ");
+                            startOfJourney = keyboard.nextInt();
+                            if (startOfJourney < 1 || startOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                        }
+                        while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
+                            System.out.print("Ending point for journey (1-10): ");
+                            endOfJourney = keyboard.nextInt();
+                            if (endOfJourney < 1 || endOfJourney > 10) {
+                                System.out.println("Please input a valid station/stop.");
+                            }
+                            if (endOfJourney == startOfJourney) {
+                                System.out.println("Please input a different station/stop. Cannot start and stop at the same station.");
+                            }
+                        }
+                        j3.setJourneyID(journeyID);
+                        j3.setTransportMode(transportMode);
+                        j3.setStartOfJourney(startOfJourney);
+                        j3.setEndOfJourney(endOfJourney);
+                        j3.setDistanceOfJourney();
+                        subCard.setJourney3(j3);
+                        return subCard;
+                }
             } else {
-                return JourneySetter(card, keyboard);
+                System.out.println("The max amount of Journeys are already set on this SmartCard.");
+                return card;
             }
         }
+        System.out.println("Invalid Card");
+        return card;
     }
 
     private void CardDeleter(Scanner keyboard) {
@@ -1407,6 +2316,1066 @@ public class SystemInterface {
         }
     }
 
+    private void FareCalculator() {
+        if (smartCard1 != InvalidCard && smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
+            double TrainTotal ;
+            double TramTotal;
+            double BusTotal;
+            double card1TrainTotal = 0;
+            double card1TramTotal = 0;
+            double card1BusTotal = 0;
+            double card1PriceFactor;
+            double card2TrainTotal = 0;
+            double card2TramTotal = 0;
+            double card2BusTotal = 0;
+            double card2PriceFactor;
+            double card3TrainTotal = 0;
+            double card3TramTotal = 0;
+            double card3BusTotal = 0;
+            double card3PriceFactor;
+            if (smartCard1.getType() == 'c') {
+                card1PriceFactor = 1.86;
+            } else if (smartCard1.getType() == 'a') {
+                card1PriceFactor = 2.24;
+            } else {
+                card1PriceFactor = 1.6;
+            }
+            if (smartCard2.getType() == 'c') {
+                card2PriceFactor = 1.86;
+            } else if (smartCard2.getType() == 'a') {
+                card2PriceFactor = 2.24;
+            } else {
+                card2PriceFactor = 1.6;
+            }
+            if (smartCard3.getType() == 'c') {
+                card3PriceFactor = 1.86;
+            } else if (smartCard3.getType() == 'a') {
+                card3PriceFactor = 2.24;
+            } else {
+                card3PriceFactor = 1.6;
+            }
+            String card1Mode1 = smartCard1.getJourney1().getTransportMode();
+            String card1Mode2 = smartCard1.getJourney2().getTransportMode();
+            String card1Mode3 = smartCard1.getJourney3().getTransportMode();
+            String card2Mode1 = smartCard2.getJourney1().getTransportMode();
+            String card2Mode2 = smartCard2.getJourney2().getTransportMode();
+            String card2Mode3 = smartCard2.getJourney3().getTransportMode();
+            String card3Mode1 = smartCard3.getJourney1().getTransportMode();
+            String card3Mode2 = smartCard3.getJourney2().getTransportMode();
+            String card3Mode3 = smartCard3.getJourney3().getTransportMode();
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            TrainTotal = card1TrainTotal + card2TrainTotal + card3TrainTotal;
+            TramTotal = card1TramTotal + card2TramTotal + card3TramTotal;
+            BusTotal = card1BusTotal + card2BusTotal + card3BusTotal;
+            if (TrainTotal == TramTotal && TramTotal == BusTotal && BusTotal == 0) {
+                System.out.println("No Journeys are being completed yet.");
+            } else {
+                System.out.println("Total transport mode journeys cost/fare:");
+                System.out.println("---------------------------------------------------------");
+                if (card1TrainTotal != 0) {
+                    System.out.println("Total cost of train journeys is $" + TrainTotal);
+                }
+                if (card1TramTotal != 0) {
+                    System.out.println("Total cost of tram journeys is $" + TramTotal);
+                }
+                if (card1BusTotal != 0) {
+                    System.out.println("Total cost of bus journeys is $" + BusTotal);
+                }
+                System.out.println("---------------------------------------------------------");
+                System.out.println();
+                System.out.println("Breakdown by smartcard:");
+                System.out.println("---------------------------------------------------------");
+                if (card1TrainTotal != 0 || card1TramTotal != 0 || card1BusTotal != 0) {
+                    System.out.println("SmartCard " + smartCard1.getCardID());
+                    if (card1TrainTotal != 0) {
+                        System.out.println("    Total cost of train journeys is $" + card1TrainTotal);
+                    }
+                    if (card1TramTotal != 0) {
+                        System.out.println("    Total cost of tram journeys is $" + card1TramTotal);
+                    }
+                    if (card1BusTotal != 0) {
+                        System.out.println("    Total cost of bus journeys is $" + card1BusTotal);
+                    }
+                }
+                if (card2TrainTotal != 0 || card2TramTotal != 0 || card2BusTotal != 0) {
+                    System.out.println("SmartCard " + smartCard2.getCardID());
+                    if (card2TrainTotal != 0) {
+                        System.out.println("    Total cost of train journeys is $" + card2TrainTotal);
+                    }
+                    if (card2TramTotal != 0) {
+                        System.out.println("    Total cost of tram journeys is $" + card2TramTotal);
+                    }
+                    if (card2BusTotal != 0) {
+                        System.out.println("    Total cost of bus journeys is $" + card2BusTotal);
+                    }
+                }
+                if (card3TrainTotal != 0 || card3TramTotal != 0 || card3BusTotal != 0) {
+                    System.out.println("SmartCard " + smartCard3.getCardID());
+                    if (card3TrainTotal != 0) {
+                        System.out.println("    Total cost of train journeys is $" + card3TrainTotal);
+                    }
+                    if (card3TramTotal != 0) {
+                        System.out.println("    Total cost of tram journeys is $" + card3TramTotal);
+                    }
+                    if (card3BusTotal != 0) {
+                        System.out.println("    Total cost of bus journeys is $" + card3BusTotal);
+                    }
+                }
+            }
+        } else if (smartCard1 != InvalidCard && smartCard2 != InvalidCard) {
+            double TrainTotal ;
+            double TramTotal;
+            double BusTotal;
+            double card1TrainTotal = 0;
+            double card1TramTotal = 0;
+            double card1BusTotal = 0;
+            double card1PriceFactor;
+            double card2TrainTotal = 0;
+            double card2TramTotal = 0;
+            double card2BusTotal = 0;
+            double card2PriceFactor;
+            if (smartCard1.getType() == 'c') {
+                card1PriceFactor = 1.86;
+            } else if (smartCard1.getType() == 'a') {
+                card1PriceFactor = 2.24;
+            } else {
+                card1PriceFactor = 1.6;
+            }
+            if (smartCard2.getType() == 'c') {
+                card2PriceFactor = 1.86;
+            } else if (smartCard2.getType() == 'a') {
+                card2PriceFactor = 2.24;
+            } else {
+                card2PriceFactor = 1.6;
+            }
+            String card1Mode1 = smartCard1.getJourney1().getTransportMode();
+            String card1Mode2 = smartCard1.getJourney2().getTransportMode();
+            String card1Mode3 = smartCard1.getJourney3().getTransportMode();
+            String card2Mode1 = smartCard2.getJourney1().getTransportMode();
+            String card2Mode2 = smartCard2.getJourney2().getTransportMode();
+            String card2Mode3 = smartCard2.getJourney3().getTransportMode();
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            TrainTotal = card1TrainTotal + card2TrainTotal;
+            TramTotal = card1TramTotal + card2TramTotal;
+            BusTotal = card1BusTotal + card2BusTotal;
+            if (TrainTotal == TramTotal && TramTotal == BusTotal && BusTotal == 0) {
+                System.out.println("No Journeys are being completed yet.");
+            } else {
+                System.out.println("Total transport mode journeys cost/fare:");
+                System.out.println("---------------------------------------------------------");
+                if (card1TrainTotal != 0) {
+                    System.out.println("Total cost of train journeys is $" + TrainTotal);
+                }
+                if (card1TramTotal != 0) {
+                    System.out.println("Total cost of tram journeys is $" + TramTotal);
+                }
+                if (card1BusTotal != 0) {
+                    System.out.println("Total cost of bus journeys is $" + BusTotal);
+                }
+                System.out.println("---------------------------------------------------------");
+                System.out.println();
+                System.out.println("Breakdown by smartcard:");
+                System.out.println("---------------------------------------------------------");
+                if (card1TrainTotal != 0 || card1TramTotal != 0 || card1BusTotal != 0) {
+                    System.out.println("SmartCard " + smartCard1.getCardID());
+                    if (card1TrainTotal != 0) {
+                        System.out.println("    Total cost of train journeys is $" + card1TrainTotal);
+                    }
+                    if (card1TramTotal != 0) {
+                        System.out.println("    Total cost of tram journeys is $" + card1TramTotal);
+                    }
+                    if (card1BusTotal != 0) {
+                        System.out.println("    Total cost of bus journeys is $" + card1BusTotal);
+                    }
+                }
+                if (card2TrainTotal != 0 || card2TramTotal != 0 || card2BusTotal != 0) {
+                    System.out.println("SmartCard " + smartCard2.getCardID());
+                    if (card2TrainTotal != 0) {
+                        System.out.println("    Total cost of train journeys is $" + card2TrainTotal);
+                    }
+                    if (card2TramTotal != 0) {
+                        System.out.println("    Total cost of tram journeys is $" + card2TramTotal);
+                    }
+                    if (card2BusTotal != 0) {
+                        System.out.println("    Total cost of bus journeys is $" + card2BusTotal);
+                    }
+                }
+            }
+        } else if (smartCard1 != InvalidCard && smartCard3 != InvalidCard) {
+            double TrainTotal ;
+            double TramTotal;
+            double BusTotal;
+            double card1TrainTotal = 0;
+            double card1TramTotal = 0;
+            double card1BusTotal = 0;
+            double card1PriceFactor;
+            double card3TrainTotal = 0;
+            double card3TramTotal = 0;
+            double card3BusTotal = 0;
+            double card3PriceFactor;
+            if (smartCard1.getType() == 'c') {
+                card1PriceFactor = 1.86;
+            } else if (smartCard1.getType() == 'a') {
+                card1PriceFactor = 2.24;
+            } else {
+                card1PriceFactor = 1.6;
+            }
+            if (smartCard3.getType() == 'c') {
+                card3PriceFactor = 1.86;
+            } else if (smartCard3.getType() == 'a') {
+                card3PriceFactor = 2.24;
+            } else {
+                card3PriceFactor = 1.6;
+            }
+            String card1Mode1 = smartCard1.getJourney1().getTransportMode();
+            String card1Mode2 = smartCard1.getJourney2().getTransportMode();
+            String card1Mode3 = smartCard1.getJourney3().getTransportMode();
+            String card3Mode1 = smartCard3.getJourney1().getTransportMode();
+            String card3Mode2 = smartCard3.getJourney2().getTransportMode();
+            String card3Mode3 = smartCard3.getJourney3().getTransportMode();
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            TrainTotal = card1TrainTotal + card3TrainTotal;
+            TramTotal = card1TramTotal + card3TramTotal;
+            BusTotal = card1BusTotal + card3BusTotal;
+            if (TrainTotal == TramTotal && TramTotal == BusTotal && BusTotal == 0) {
+                System.out.println("No Journeys are being completed yet.");
+            } else {
+                System.out.println("Total transport mode journeys cost/fare:");
+                System.out.println("---------------------------------------------------------");
+                if (card1TrainTotal != 0) {
+                    System.out.println("Total cost of train journeys is $" + TrainTotal);
+                }
+                if (card1TramTotal != 0) {
+                    System.out.println("Total cost of tram journeys is $" + TramTotal);
+                }
+                if (card1BusTotal != 0) {
+                    System.out.println("Total cost of bus journeys is $" + BusTotal);
+                }
+                System.out.println("---------------------------------------------------------");
+                System.out.println();
+                System.out.println("Breakdown by smartcard:");
+                System.out.println("---------------------------------------------------------");
+                if (card1TrainTotal != 0 || card1TramTotal != 0 || card1BusTotal != 0) {
+                    System.out.println("SmartCard " + smartCard1.getCardID());
+                    if (card1TrainTotal != 0) {
+                        System.out.println("    Total cost of train journeys is $" + card1TrainTotal);
+                    }
+                    if (card1TramTotal != 0) {
+                        System.out.println("    Total cost of tram journeys is $" + card1TramTotal);
+                    }
+                    if (card1BusTotal != 0) {
+                        System.out.println("    Total cost of bus journeys is $" + card1BusTotal);
+                    }
+                }
+                if (card3TrainTotal != 0 || card3TramTotal != 0 || card3BusTotal != 0) {
+                    System.out.println("SmartCard " + smartCard3.getCardID());
+                    if (card3TrainTotal != 0) {
+                        System.out.println("    Total cost of train journeys is $" + card3TrainTotal);
+                    }
+                    if (card3TramTotal != 0) {
+                        System.out.println("    Total cost of tram journeys is $" + card3TramTotal);
+                    }
+                    if (card3BusTotal != 0) {
+                        System.out.println("    Total cost of bus journeys is $" + card3BusTotal);
+                    }
+                }
+            }
+        } else if (smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
+            double TrainTotal ;
+            double TramTotal;
+            double BusTotal;
+            double card2TrainTotal = 0;
+            double card2TramTotal = 0;
+            double card2BusTotal = 0;
+            double card2PriceFactor;
+            double card3TrainTotal = 0;
+            double card3TramTotal = 0;
+            double card3BusTotal = 0;
+            double card3PriceFactor;
+            if (smartCard2.getType() == 'c') {
+                card2PriceFactor = 1.86;
+            } else if (smartCard2.getType() == 'a') {
+                card2PriceFactor = 2.24;
+            } else {
+                card2PriceFactor = 1.6;
+            }
+            if (smartCard3.getType() == 'c') {
+                card3PriceFactor = 1.86;
+            } else if (smartCard3.getType() == 'a') {
+                card3PriceFactor = 2.24;
+            } else {
+                card3PriceFactor = 1.6;
+            }
+            String card2Mode1 = smartCard2.getJourney1().getTransportMode();
+            String card2Mode2 = smartCard2.getJourney2().getTransportMode();
+            String card2Mode3 = smartCard2.getJourney3().getTransportMode();
+            String card3Mode1 = smartCard3.getJourney1().getTransportMode();
+            String card3Mode2 = smartCard3.getJourney2().getTransportMode();
+            String card3Mode3 = smartCard3.getJourney3().getTransportMode();
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            TrainTotal = card2TrainTotal + card3TrainTotal;
+            TramTotal = card2TramTotal + card3TramTotal;
+            BusTotal = card2BusTotal + card3BusTotal;
+            if (TrainTotal == TramTotal && TramTotal == BusTotal && BusTotal == 0) {
+                System.out.println("No Journeys are being completed yet.");
+            } else {
+                System.out.println("Total transport mode journeys cost/fare:");
+                System.out.println("---------------------------------------------------------");
+                if (card2TrainTotal != 0) {
+                    System.out.println("Total cost of train journeys is $" + TrainTotal);
+                }
+                if (card2TramTotal != 0) {
+                    System.out.println("Total cost of tram journeys is $" + TramTotal);
+                }
+                if (card2BusTotal != 0) {
+                    System.out.println("Total cost of bus journeys is $" + BusTotal);
+                }
+                System.out.println("---------------------------------------------------------");
+                System.out.println();
+                System.out.println("Breakdown by smartcard:");
+                System.out.println("---------------------------------------------------------");
+                if (card2TrainTotal != 0 || card2TramTotal != 0 || card2BusTotal != 0) {
+                    System.out.println("SmartCard " + smartCard2.getCardID());
+                    if (card2TrainTotal != 0) {
+                        System.out.println("    Total cost of train journeys is $" + card2TrainTotal);
+                    }
+                    if (card2TramTotal != 0) {
+                        System.out.println("    Total cost of tram journeys is $" + card2TramTotal);
+                    }
+                    if (card2BusTotal != 0) {
+                        System.out.println("    Total cost of bus journeys is $" + card2BusTotal);
+                    }
+                }
+                if (card3TrainTotal != 0 || card3TramTotal != 0 || card3BusTotal != 0) {
+                    System.out.println("SmartCard " + smartCard3.getCardID());
+                    if (card3TrainTotal != 0) {
+                        System.out.println("    Total cost of train journeys is $" + card3TrainTotal);
+                    }
+                    if (card3TramTotal != 0) {
+                        System.out.println("    Total cost of tram journeys is $" + card3TramTotal);
+                    }
+                    if (card3BusTotal != 0) {
+                        System.out.println("    Total cost of bus journeys is $" + card3BusTotal);
+                    }
+                }
+            }
+        } else if (smartCard1 != InvalidCard) {
+            double card1TrainTotal = 0;
+            double card1TramTotal = 0;
+            double card1BusTotal = 0;
+            double card1PriceFactor;
+            if (smartCard1.getType() == 'c') {
+                card1PriceFactor = 1.86;
+            } else if (smartCard1.getType() == 'a') {
+                card1PriceFactor = 2.24;
+            } else {
+                card1PriceFactor = 1.6;
+            }
+            String card1Mode1 = smartCard1.getJourney1().getTransportMode();
+            String card1Mode2 = smartCard1.getJourney2().getTransportMode();
+            String card1Mode3 = smartCard1.getJourney3().getTransportMode();
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("train")) {
+                card1TrainTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("train")) {
+                card1TrainTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("tram")) {
+                card1TramTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("tram")) {
+                card1TramTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card1Mode1.equals(card1Mode2) && card1Mode2.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 4.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode2) && card1Mode2.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode1.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode2.equals(card1Mode3) && card1Mode3.equals("bus")) {
+                card1BusTotal = 3 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney() + smartCard1.getJourney3().getDistanceOfJourney());
+            } else if (card1Mode1.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney1().getDistanceOfJourney());
+            } else if (card1Mode2.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney2().getDistanceOfJourney());
+            } else if (card1Mode3.equals("bus")) {
+                card1BusTotal = 1.5 + card1PriceFactor * (smartCard1.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card1TrainTotal == card1TramTotal && card1TramTotal == card1BusTotal && card1BusTotal == 0) {
+                System.out.println("No Journeys are being completed yet.");
+            } else {
+                System.out.println("Total transport mode journeys cost/fare:");
+                System.out.println("---------------------------------------------------------");
+                if (card1TrainTotal != 0) {
+                    System.out.println("Total cost of train journeys is $" + card1TrainTotal);
+                }
+                if (card1TramTotal != 0) {
+                    System.out.println("Total cost of tram journeys is $" + card1TramTotal);
+                }
+                if (card1BusTotal != 0) {
+                    System.out.println("Total cost of bus journeys is $" + card1BusTotal);
+                }
+                System.out.println("---------------------------------------------------------");
+                System.out.println();
+                System.out.println("Breakdown by smartcard:");
+                System.out.println("---------------------------------------------------------");
+                System.out.println("SmartCard " + smartCard1.getCardID());
+                if (card1TrainTotal != 0) {
+                    System.out.println("    Total cost of train journeys is $" + card1TrainTotal);
+                }
+                if (card1TramTotal != 0) {
+                    System.out.println("    Total cost of tram journeys is $" + card1TramTotal);
+                }
+                if (card1BusTotal != 0) {
+                    System.out.println("    Total cost of bus journeys is $" + card1BusTotal);
+                }
+            }
+
+        } else if (smartCard2 != InvalidCard) {
+            double card2TrainTotal = 0;
+            double card2TramTotal = 0;
+            double card2BusTotal = 0;
+            double card2PriceFactor;
+            if (smartCard2.getType() == 'c') {
+                card2PriceFactor = 1.86;
+            } else if (smartCard2.getType() == 'a') {
+                card2PriceFactor = 2.24;
+            } else {
+                card2PriceFactor = 1.6;
+            }
+            String card2Mode1 = smartCard2.getJourney1().getTransportMode();
+            String card2Mode2 = smartCard2.getJourney2().getTransportMode();
+            String card2Mode3 = smartCard2.getJourney3().getTransportMode();
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("train")) {
+                card2TrainTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("train")) {
+                card2TrainTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("tram")) {
+                card2TramTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("tram")) {
+                card2TramTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2Mode1.equals(card2Mode2) && card2Mode2.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 4.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode2) && card2Mode2.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode1.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode2.equals(card2Mode3) && card2Mode3.equals("bus")) {
+                card2BusTotal = 3 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney() + smartCard2.getJourney3().getDistanceOfJourney());
+            } else if (card2Mode1.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney1().getDistanceOfJourney());
+            } else if (card2Mode2.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney2().getDistanceOfJourney());
+            } else if (card2Mode3.equals("bus")) {
+                card2BusTotal = 1.5 + card2PriceFactor * (smartCard2.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card2TrainTotal == card2TramTotal && card2TramTotal == card2BusTotal && card2BusTotal == 0) {
+                System.out.println("No Journeys are being completed yet.");
+            } else {
+                System.out.println("Total transport mode journeys cost/fare:");
+                System.out.println("---------------------------------------------------------");
+                if (card2TrainTotal != 0) {
+                    System.out.println("Total cost of train journeys is $" + card2TrainTotal);
+                }
+                if (card2TramTotal != 0) {
+                    System.out.println("Total cost of tram journeys is $" + card2TramTotal);
+                }
+                if (card2BusTotal != 0) {
+                    System.out.println("Total cost of bus journeys is $" + card2BusTotal);
+                }
+                System.out.println("---------------------------------------------------------");
+                System.out.println();
+                System.out.println("Breakdown by smartcard:");
+                System.out.println("---------------------------------------------------------");
+                System.out.println("SmartCard " + smartCard2.getCardID());
+                if (card2TrainTotal != 0) {
+                    System.out.println("    Total cost of train journeys is $" + card2TrainTotal);
+                }
+                if (card2TramTotal != 0) {
+                    System.out.println("    Total cost of tram journeys is $" + card2TramTotal);
+                }
+                if (card2BusTotal != 0) {
+                    System.out.println("    Total cost of bus journeys is $" + card2BusTotal);
+                }
+            }
+        } else if (smartCard3 != InvalidCard) {
+            double card3TrainTotal = 0;
+            double card3TramTotal = 0;
+            double card3BusTotal = 0;
+            double card3PriceFactor;
+            if (smartCard3.getType() == 'c') {
+                card3PriceFactor = 1.86;
+            } else if (smartCard3.getType() == 'a') {
+                card3PriceFactor = 2.24;
+            } else {
+                card3PriceFactor = 1.6;
+            }
+            String card3Mode1 = smartCard3.getJourney1().getTransportMode();
+            String card3Mode2 = smartCard3.getJourney2().getTransportMode();
+            String card3Mode3 = smartCard3.getJourney3().getTransportMode();
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("train")) {
+                card3TrainTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("train")) {
+                card3TrainTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("tram")) {
+                card3TramTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("tram")) {
+                card3TramTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3Mode1.equals(card3Mode2) && card3Mode2.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 4.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode2) && card3Mode2.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode1.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode2.equals(card3Mode3) && card3Mode3.equals("bus")) {
+                card3BusTotal = 3 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney() + smartCard3.getJourney3().getDistanceOfJourney());
+            } else if (card3Mode1.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney1().getDistanceOfJourney());
+            } else if (card3Mode2.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney2().getDistanceOfJourney());
+            } else if (card3Mode3.equals("bus")) {
+                card3BusTotal = 1.5 + card3PriceFactor * (smartCard3.getJourney3().getDistanceOfJourney());
+            }
+
+            if (card3TrainTotal == card3TramTotal && card3TramTotal == card3BusTotal && card3BusTotal == 0) {
+                System.out.println("No Journeys are being completed yet.");
+            } else {
+                System.out.println("Total transport mode journeys cost/fare:");
+                System.out.println("---------------------------------------------------------");
+                if (card3TrainTotal != 0) {
+                    System.out.println("Total cost of train journeys is $" + card3TrainTotal);
+                }
+                if (card3TramTotal != 0) {
+                    System.out.println("Total cost of tram journeys is $" + card3TramTotal);
+                }
+                if (card3BusTotal != 0) {
+                    System.out.println("Total cost of bus journeys is $" + card3BusTotal);
+                }
+                System.out.println("---------------------------------------------------------");
+                System.out.println();
+                System.out.println("Breakdown by smartcard:");
+                System.out.println("---------------------------------------------------------");
+                System.out.println("SmartCard " + smartCard3.getCardID());
+                if (card3TrainTotal != 0) {
+                    System.out.println("    Total cost of train journeys is $" + card3TrainTotal);
+                }
+                if (card3TramTotal != 0) {
+                    System.out.println("    Total cost of tram journeys is $" + card3TramTotal);
+                }
+                if (card3BusTotal != 0) {
+                    System.out.println("    Total cost of bus journeys is $" + card3BusTotal);
+                }
+            }
+        } else {
+            System.out.println("No Journeys are being completed yet.");
+        }
+    }
+
     private void FunctionSelector(Scanner keyboard) {
         String mode;
         int cardJourneySet = 0;
@@ -1418,8 +3387,8 @@ public class SystemInterface {
         System.out.println("(5) List SmartCards");
         System.out.println("(6) List Journeys");
         System.out.println("(7) Find Journeys with specific transport type");
-        System.out.println("(8) ");
-        System.out.println("(9) Exit.");
+        System.out.println("(8) Calculate Fares");
+        System.out.println("(9) Exit");
         System.out.print("What would you like to do (1-9)? ");
         int choice = keyboard.nextInt();
         switch (choice) {
@@ -1430,7 +3399,7 @@ public class SystemInterface {
                 if (smartCard1 != InvalidCard && smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
                     while (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
                         System.out.println("The available cards to set journeys on are: " + smartCard1.getCardID() + ", " + smartCard2.getCardID() + " and " + smartCard3.getCardID() + ".");
-                        System.out.print("Which card would you like to set journeys on?");
+                        System.out.print("Which card would you like to set journeys on? ");
                         cardJourneySet = keyboard.nextInt();
                         if (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
                             System.out.println("Please input a valid value.");
@@ -1446,7 +3415,7 @@ public class SystemInterface {
                 } else if (smartCard1 != InvalidCard && smartCard2 != InvalidCard) {
                     while (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
                         System.out.println("The available cards to set journeys on are: " + smartCard1.getCardID() + " and " + smartCard2.getCardID() + ".");
-                        System.out.print("Which card would you like to set journeys on?");
+                        System.out.print("Which card would you like to set journeys on? ");
                         cardJourneySet = keyboard.nextInt();
                         if (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
                             System.out.println("Please input a valid value.");
@@ -1460,7 +3429,7 @@ public class SystemInterface {
                 } else if (smartCard1 != InvalidCard && smartCard3 != InvalidCard) {
                     while (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
                         System.out.println("The available cards to set journeys on are: " + smartCard1.getCardID() + " and " + smartCard3.getCardID() + ".");
-                        System.out.print("Which card would you like to set journeys on?");
+                        System.out.print("Which card would you like to set journeys on? ");
                         cardJourneySet = keyboard.nextInt();
                         if (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
                             System.out.println("Please input a valid value.");
@@ -1474,7 +3443,7 @@ public class SystemInterface {
                 } else if (smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
                     while (cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
                         System.out.println("The available cards to set journeys on are: " + smartCard2.getCardID() + " and " + smartCard3.getCardID() + ".");
-                        System.out.print("Which card would you like to set journeys on?");
+                        System.out.print("Which card would you like to set journeys on? ");
                         cardJourneySet = keyboard.nextInt();
                         if (cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
                             System.out.println("Please input a valid value.");
@@ -1488,7 +3457,7 @@ public class SystemInterface {
                 } else if (smartCard1 != InvalidCard) {
                     while (cardJourneySet != smartCard1.getCardID() && cardJourneySet < 1) {
                         System.out.println("The available cards to set journeys on are: " + smartCard1.getCardID() + ".");
-                        System.out.print("Which card would you like to set journeys on?");
+                        System.out.print("Which card would you like to set journeys on? ");
                         cardJourneySet = keyboard.nextInt();
                         if (cardJourneySet != smartCard1.getCardID() && cardJourneySet < 1) {
                             System.out.println("Please input a valid value.");
@@ -1500,7 +3469,7 @@ public class SystemInterface {
                 } else if (smartCard2 != InvalidCard) {
                     while (cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
                         System.out.println("The available cards to set journeys on are: " + smartCard2.getCardID() + ".");
-                        System.out.print("Which card would you like to set journeys on?");
+                        System.out.print("Which card would you like to set journeys on? ");
                         cardJourneySet = keyboard.nextInt();
                         if (cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
                             System.out.println("Please input a valid value.");
@@ -1512,7 +3481,7 @@ public class SystemInterface {
                 } else if (smartCard3 != InvalidCard) {
                     while (cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
                         System.out.println("The available cards to set journeys on are: " + smartCard3.getCardID() + ".");
-                        System.out.print("Which card would you like to set journeys on?");
+                        System.out.print("Which card would you like to set journeys on? ");
                         cardJourneySet = keyboard.nextInt();
                         if (cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
                             System.out.println("Please input a valid value.");
@@ -1529,6 +3498,103 @@ public class SystemInterface {
                 CardDeleter(keyboard);
                 break;
             case 4:
+                if (smartCard1 != InvalidCard && smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
+                    while (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to delete journeys from are: " + smartCard1.getCardID() + ", " + smartCard2.getCardID() + " and " + smartCard3.getCardID() + ".");
+                        System.out.print("Which card would you like to delete journeys from? ");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard1.getCardID()) {
+                        smartCard1 = JourneyDeleter(smartCard1, keyboard);
+                    } else if (cardJourneySet == smartCard2.getCardID()) {
+                        smartCard2 = JourneyDeleter(smartCard2, keyboard);
+                    } else if (cardJourneySet == smartCard3.getCardID()) {
+                        smartCard3 = JourneyDeleter(smartCard3, keyboard);
+                    }
+                } else if (smartCard1 != InvalidCard && smartCard2 != InvalidCard) {
+                    while (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to delete journeys from are: " + smartCard1.getCardID() + " and " + smartCard2.getCardID() + ".");
+                        System.out.print("Which card would you like to delete journeys from? ");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard1.getCardID()) {
+                        smartCard1 = JourneyDeleter(smartCard1, keyboard);
+                    } else if (cardJourneySet == smartCard2.getCardID()) {
+                        smartCard2 = JourneyDeleter(smartCard2, keyboard);
+                    }
+                } else if (smartCard1 != InvalidCard && smartCard3 != InvalidCard) {
+                    while (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to delete journeys from are: " + smartCard1.getCardID() + " and " + smartCard3.getCardID() + ".");
+                        System.out.print("Which card would you like to delete journeys from? ");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard1.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard1.getCardID()) {
+                        smartCard1 = JourneyDeleter(smartCard1, keyboard);
+                    } else if (cardJourneySet == smartCard3.getCardID()) {
+                        smartCard3 = JourneyDeleter(smartCard3, keyboard);
+                    }
+                } else if (smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
+                    while (cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to delete journeys from are: " + smartCard2.getCardID() + " and " + smartCard3.getCardID() + ".");
+                        System.out.print("Which card would you like to delete journeys from? ");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard2.getCardID() && cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard2.getCardID()) {
+                        smartCard2 = JourneyDeleter(smartCard2, keyboard);
+                    } else if (cardJourneySet == smartCard3.getCardID()) {
+                        smartCard3 = JourneyDeleter(smartCard3, keyboard);
+                    }
+                } else if (smartCard1 != InvalidCard) {
+                    while (cardJourneySet != smartCard1.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to delete journeys from are: " + smartCard1.getCardID() + ".");
+                        System.out.print("Which card would you like to delete journeys from? ");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard1.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard1.getCardID()) {
+                        smartCard1 = JourneyDeleter(smartCard1, keyboard);
+                    }
+                } else if (smartCard2 != InvalidCard) {
+                    while (cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to delete journeys from are: " + smartCard2.getCardID() + ".");
+                        System.out.print("Which card would you like to delete journeys from? ");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard2.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard2.getCardID()) {
+                        smartCard2 = JourneyDeleter(smartCard2, keyboard);
+                    }
+                } else if (smartCard3 != InvalidCard) {
+                    while (cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                        System.out.println("The available cards to delete journeys from are: " + smartCard3.getCardID() + ".");
+                        System.out.print("Which card would you like to delete journeys from? ");
+                        cardJourneySet = keyboard.nextInt();
+                        if (cardJourneySet != smartCard3.getCardID() && cardJourneySet < 1) {
+                            System.out.println("Please input a valid value.");
+                        }
+                    }
+                    if (cardJourneySet == smartCard3.getCardID()) {
+                        smartCard3 = JourneyDeleter(smartCard3, keyboard);
+                    }
+                } else {
+                    System.out.println("There are no cards to delete journeys from.");
+                }
                 break;
             case 5:
                 CardLister();
@@ -1538,10 +3604,11 @@ public class SystemInterface {
                 break;
             case 7:
                 System.out.print("What transport mode would you like to know about? ");
-                mode = keyboard.next();
+                mode = keyboard.next().toLowerCase();
                 TransportModeFinder(mode);
                 break;
             case 8:
+                FareCalculator();
                 break;
             case 9:
                 running = false;
