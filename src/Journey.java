@@ -1,5 +1,6 @@
 public class Journey {
 
+    // Sets up the private variables.
     private int journeyID;
     private String transportMode;
     private int startOfJourney;
@@ -7,6 +8,7 @@ public class Journey {
     private int distanceOfJourney;
 
 
+    // Getters and Setters.
     public void setTransportMode(String transportMode)
     {
         this.transportMode = transportMode;
@@ -33,6 +35,7 @@ public class Journey {
         return startOfJourney;
     }
 
+    // This actually calculates the distance rather than allowing for an input.
     public void setDistanceOfJourney() {
         if (endOfJourney > startOfJourney) {
             this.distanceOfJourney = endOfJourney - startOfJourney;

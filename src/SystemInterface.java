@@ -41,7 +41,8 @@ public class SystemInterface {
         }
     }
 
-    // This function allows users to set up SmartCards. It contains a large amount of logic to ensure that any already used SmartCard is not overwritten.
+    /* This function allows users to set up SmartCards. It contains a large amount of logic to ensure that any already
+    used SmartCard is not overwritten. Also contains logic to ensure that no two cards can have the same cardID.*/
     private void CardSetter(Scanner keyboard) {
         int C1 = smartCard1.getCardID();
         int C2 = smartCard2.getCardID();
@@ -677,6 +678,13 @@ public class SystemInterface {
         }
     }
 
+    /* This function allows users to set up Journeys on SmartCards. It also contains a large amount of logic to ensure
+    that pre-existing Journeys are not overwritten. There are 3 main cases depending on the card type. There are also
+    cases for if you wish to set a number of Journeys at a time. Suppose there was a card with type 's' with Journey1
+    and Journey3 already being assigned, then this function has logic that ensure that only 1 Journey can be added to
+    the card inn the Journey2 slot. All of such cases are covered. Much of the code is repeated, this could be avoided
+    if arrays were allowed, as you could iterate through using a for loop. Also ensures that no 2 journeys on the same
+    card have the same journeyID, however it does not check the other cards.*/
     private SmartCard JourneySetter(SmartCard card, Scanner keyboard) {
         SmartCard subCard = card;
         if (card.getType() == 'c') {
@@ -855,28 +863,28 @@ public class SystemInterface {
                         startOfJourney = 0;
                         endOfJourney = 0;
                         while (journeyID < 1 || journeyID == j1.getJourneyID()) {
-                            System.out.print("Journey 1's ID: ");
+                            System.out.print("Journey 2's ID: ");
                             journeyID = keyboard.nextInt();
                             if (journeyID < 1 || journeyID == j1.getJourneyID()) {
                                 System.out.println("Please input a unique ID greater than 0.");
                             }
                         }
                         while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                            System.out.print("Transport mode 1: ");
+                            System.out.print("Transport mode 2: ");
                             transportMode = keyboard.next().toLowerCase();
                             if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                                 System.out.println("Please input a valid transport mode (train, tram or bus).");
                             }
                         }
                         while (startOfJourney < 1 || startOfJourney > 10) {
-                            System.out.print("Starting point for journey 1 (1-10): ");
+                            System.out.print("Starting point for journey 2 (1-10): ");
                             startOfJourney = keyboard.nextInt();
                             if (startOfJourney < 1 || startOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
                             }
                         }
                         while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
-                            System.out.print("Ending point for journey 1 (1-10): ");
+                            System.out.print("Ending point for journey 2 (1-10): ");
                             endOfJourney = keyboard.nextInt();
                             if (endOfJourney < 1 || endOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
@@ -1124,28 +1132,28 @@ public class SystemInterface {
                         startOfJourney = 0;
                         endOfJourney = 0;
                         while (journeyID < 1 || journeyID == j1.getJourneyID()) {
-                            System.out.print("Journey 1's ID: ");
+                            System.out.print("Journey 2's ID: ");
                             journeyID = keyboard.nextInt();
                             if (journeyID < 1 || journeyID == j1.getJourneyID()) {
                                 System.out.println("Please input a unique ID greater than 0.");
                             }
                         }
                         while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                            System.out.print("Transport mode 1: ");
+                            System.out.print("Transport mode 2: ");
                             transportMode = keyboard.next().toLowerCase();
                             if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                                 System.out.println("Please input a valid transport mode (train, tram or bus).");
                             }
                         }
                         while (startOfJourney < 1 || startOfJourney > 10) {
-                            System.out.print("Starting point for journey 1 (1-10): ");
+                            System.out.print("Starting point for journey 2 (1-10): ");
                             startOfJourney = keyboard.nextInt();
                             if (startOfJourney < 1 || startOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
                             }
                         }
                         while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
-                            System.out.print("Ending point for journey 1 (1-10): ");
+                            System.out.print("Ending point for journey 2 (1-10): ");
                             endOfJourney = keyboard.nextInt();
                             if (endOfJourney < 1 || endOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
@@ -1206,28 +1214,28 @@ public class SystemInterface {
                         startOfJourney = 0;
                         endOfJourney = 0;
                         while (journeyID < 1 || journeyID == j1.getJourneyID()) {
-                            System.out.print("Journey 1's ID: ");
+                            System.out.print("Journey 2's ID: ");
                             journeyID = keyboard.nextInt();
                             if (journeyID < 1 || journeyID == j1.getJourneyID()) {
                                 System.out.println("Please input a unique ID greater than 0.");
                             }
                         }
                         while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                            System.out.print("Transport mode 1: ");
+                            System.out.print("Transport mode 2: ");
                             transportMode = keyboard.next().toLowerCase();
                             if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                                 System.out.println("Please input a valid transport mode (train, tram or bus).");
                             }
                         }
                         while (startOfJourney < 1 || startOfJourney > 10) {
-                            System.out.print("Starting point for journey 1 (1-10): ");
+                            System.out.print("Starting point for journey 2 (1-10): ");
                             startOfJourney = keyboard.nextInt();
                             if (startOfJourney < 1 || startOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
                             }
                         }
                         while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
-                            System.out.print("Ending point for journey 1 (1-10): ");
+                            System.out.print("Ending point for journey 2 (1-10): ");
                             endOfJourney = keyboard.nextInt();
                             if (endOfJourney < 1 || endOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
@@ -1247,28 +1255,28 @@ public class SystemInterface {
                         startOfJourney = 0;
                         endOfJourney = 0;
                         while (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == j2.getJourneyID()) {
-                            System.out.print("Journey 1's ID: ");
+                            System.out.print("Journey 3's ID: ");
                             journeyID = keyboard.nextInt();
                             if (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == j2.getJourneyID()) {
                                 System.out.println("Please input a unique ID greater than 0.");
                             }
                         }
                         while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                            System.out.print("Transport mode 1: ");
+                            System.out.print("Transport mode 3: ");
                             transportMode = keyboard.next().toLowerCase();
                             if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                                 System.out.println("Please input a valid transport mode (train, tram or bus).");
                             }
                         }
                         while (startOfJourney < 1 || startOfJourney > 10) {
-                            System.out.print("Starting point for journey 1 (1-10): ");
+                            System.out.print("Starting point for journey 3 (1-10): ");
                             startOfJourney = keyboard.nextInt();
                             if (startOfJourney < 1 || startOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
                             }
                         }
                         while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
-                            System.out.print("Ending point for journey 1 (1-10): ");
+                            System.out.print("Ending point for journey 3 (1-10): ");
                             endOfJourney = keyboard.nextInt();
                             if (endOfJourney < 1 || endOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
@@ -1390,28 +1398,28 @@ public class SystemInterface {
                         startOfJourney = 0;
                         endOfJourney = 0;
                         while (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == card.getJourney3().getJourneyID()) {
-                            System.out.print("Journey 1's ID: ");
+                            System.out.print("Journey 2's ID: ");
                             journeyID = keyboard.nextInt();
                             if (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == card.getJourney3().getJourneyID()) {
                                 System.out.println("Please input a unique ID greater than 0.");
                             }
                         }
                         while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                            System.out.print("Transport mode 1: ");
+                            System.out.print("Transport mode 2: ");
                             transportMode = keyboard.next().toLowerCase();
                             if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                                 System.out.println("Please input a valid transport mode (train, tram or bus).");
                             }
                         }
                         while (startOfJourney < 1 || startOfJourney > 10) {
-                            System.out.print("Starting point for journey 1 (1-10): ");
+                            System.out.print("Starting point for journey 2 (1-10): ");
                             startOfJourney = keyboard.nextInt();
                             if (startOfJourney < 1 || startOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
                             }
                         }
                         while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
-                            System.out.print("Ending point for journey 1 (1-10): ");
+                            System.out.print("Ending point for journey 2 (1-10): ");
                             endOfJourney = keyboard.nextInt();
                             if (endOfJourney < 1 || endOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
@@ -1533,28 +1541,28 @@ public class SystemInterface {
                         startOfJourney = 0;
                         endOfJourney = 0;
                         while (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == card.getJourney2().getJourneyID()) {
-                            System.out.print("Journey 1's ID: ");
+                            System.out.print("Journey 2's ID: ");
                             journeyID = keyboard.nextInt();
                             if (journeyID < 1 || journeyID == j1.getJourneyID() || journeyID == card.getJourney2().getJourneyID()) {
                                 System.out.println("Please input a unique ID greater than 0.");
                             }
                         }
                         while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                            System.out.print("Transport mode 1: ");
+                            System.out.print("Transport mode 2: ");
                             transportMode = keyboard.next().toLowerCase();
                             if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                                 System.out.println("Please input a valid transport mode (train, tram or bus).");
                             }
                         }
                         while (startOfJourney < 1 || startOfJourney > 10) {
-                            System.out.print("Starting point for journey 1 (1-10): ");
+                            System.out.print("Starting point for journey 2 (1-10): ");
                             startOfJourney = keyboard.nextInt();
                             if (startOfJourney < 1 || startOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
                             }
                         }
                         while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
-                            System.out.print("Ending point for journey 1 (1-10): ");
+                            System.out.print("Ending point for journey 2 (1-10): ");
                             endOfJourney = keyboard.nextInt();
                             if (endOfJourney < 1 || endOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
@@ -1676,28 +1684,28 @@ public class SystemInterface {
                         startOfJourney = 0;
                         endOfJourney = 0;
                         while (journeyID < 1 || journeyID == j2.getJourneyID() || journeyID == card.getJourney1().getJourneyID()) {
-                            System.out.print("Journey 1's ID: ");
+                            System.out.print("Journey 2's ID: ");
                             journeyID = keyboard.nextInt();
                             if (journeyID < 1 || journeyID == j2.getJourneyID() || journeyID == card.getJourney1().getJourneyID()) {
                                 System.out.println("Please input a unique ID greater than 0.");
                             }
                         }
                         while (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
-                            System.out.print("Transport mode 1: ");
+                            System.out.print("Transport mode 2: ");
                             transportMode = keyboard.next().toLowerCase();
                             if (!transportMode.equals("train") && !transportMode.equals("tram") && !transportMode.equals("bus")) {
                                 System.out.println("Please input a valid transport mode (train, tram or bus).");
                             }
                         }
                         while (startOfJourney < 1 || startOfJourney > 10) {
-                            System.out.print("Starting point for journey 1 (1-10): ");
+                            System.out.print("Starting point for journey 2 (1-10): ");
                             startOfJourney = keyboard.nextInt();
                             if (startOfJourney < 1 || startOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
                             }
                         }
                         while (endOfJourney < 1 || endOfJourney > 10 || endOfJourney == startOfJourney) {
-                            System.out.print("Ending point for journey 1 (1-10): ");
+                            System.out.print("Ending point for journey 2 (1-10): ");
                             endOfJourney = keyboard.nextInt();
                             if (endOfJourney < 1 || endOfJourney > 10) {
                                 System.out.println("Please input a valid station/stop.");
@@ -1903,6 +1911,7 @@ public class SystemInterface {
         return card;
     }
 
+    // This function asks the user what card they wish to delete via the cardID. When a valid cardID is chosen, the SmartCard with that cardID is set to the InvalidCard.
     private void CardDeleter(Scanner keyboard) {
         int C1 = smartCard1.getCardID();
         int C2 = smartCard2.getCardID();
@@ -1987,6 +1996,7 @@ public class SystemInterface {
         }
     }
 
+    // This function asks the user what Journey they would like to delete off of a selected SmartCard using the journeyID, similar to above.
     private SmartCard JourneyDeleter(SmartCard card, Scanner keyboard) {
         SmartCard subCard = card;
         int J1 = card.getJourney1().getJourneyID();
@@ -2092,8 +2102,10 @@ public class SystemInterface {
         return card;
     }
 
+    // This function lists the cards that are set with the number of journeys set on them. It then lists the Journeys.
     private void CardLister() {
         int num1, num2, num3;
+        // These variables are just to shorten the code, sCxjIDy means SmartCard x journeyID y
         int sC1jID1 = smartCard1.getJourney1().getJourneyID();
         int sC1jID2 = smartCard1.getJourney2().getJourneyID();
         int sC1jID3 = smartCard1.getJourney3().getJourneyID();
@@ -2246,6 +2258,7 @@ public class SystemInterface {
 
     }
 
+    // This function simply compares every Journey to the InvalidJourney, if it is not the InvalidJourney, it is displayed.
     private void JourneyLister() {
         Journey sC1J1 = smartCard1.getJourney1();
         Journey sC1J2 = smartCard1.getJourney2();
@@ -2285,6 +2298,7 @@ public class SystemInterface {
         }
     }
 
+    // This function simply checks the transportMode of all the journeys, if it is the inputted String, it is displayed.
     private void TransportModeFinder(String mode) {
         if (smartCard1.getJourney1().getTransportMode().equals(mode)){
             System.out.println("Journey " + smartCard1.getJourney1().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard1.getCardID() + ".");
@@ -2316,6 +2330,9 @@ public class SystemInterface {
         }
     }
 
+    /* This function calculates all the fares. There is a lot of logic in this to ensure that only valid Journeys are
+    displayed and that each of the transportModes are grouped together and calculated. Simply as it is requested via
+    the description provided.*/
     private void FareCalculator() {
         if (smartCard1 != InvalidCard && smartCard2 != InvalidCard && smartCard3 != InvalidCard) {
             double TrainTotal ;
@@ -3382,6 +3399,9 @@ public class SystemInterface {
         }
     }
 
+    /* This function was not asked for, nor was there any indication on how you wanted the function to work, so this
+    is the way in which the program is interacted with. There is a switch case that runs all the options and allows
+    users to choose what they wish to do.*/
     private void FunctionSelector(Scanner keyboard) {
         String mode;
         int cardJourneySet = 0;

@@ -1,5 +1,6 @@
 public class SmartCard {
 
+    // Sets up the private variables.
     private int cardID;
     private char type;
     private double balance;
@@ -7,6 +8,7 @@ public class SmartCard {
     private Journey journey2;
     private Journey journey3;
 
+    // Getters and Setters.
     public void setSmartCardID(int cardID) {
         this.cardID = cardID;
     }
