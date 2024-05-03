@@ -2311,7 +2311,6 @@ public class SystemInterface {
         }
         if (smartCard2.getJourney1().getTransportMode().equals(mode)){
             System.out.println("Journey " + smartCard2.getJourney1().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard2.getCardID() + ".");
-            System.out.println(smartCard2.getJourney1().getJourneyID() + smartCard2.getJourney2().getTransportMode());
         }
         if (smartCard2.getJourney2().getTransportMode().equals(mode)){
             System.out.println("Journey " + smartCard2.getJourney2().getJourneyID() + " has that transport mode, and it belongs to smartcard " + smartCard2.getCardID() + ".");
@@ -2533,13 +2532,13 @@ public class SystemInterface {
             } else {
                 System.out.println("Total transport mode journeys cost/fare:");
                 System.out.println("---------------------------------------------------------");
-                if (card1TrainTotal != 0) {
+                if (TrainTotal != 0) {
                     System.out.println("Total cost of train journeys is $" + TrainTotal);
                 }
-                if (card1TramTotal != 0) {
+                if (TramTotal != 0) {
                     System.out.println("Total cost of tram journeys is $" + TramTotal);
                 }
-                if (card1BusTotal != 0) {
+                if (BusTotal != 0) {
                     System.out.println("Total cost of bus journeys is $" + BusTotal);
                 }
                 System.out.println("---------------------------------------------------------");
@@ -2721,13 +2720,13 @@ public class SystemInterface {
             } else {
                 System.out.println("Total transport mode journeys cost/fare:");
                 System.out.println("---------------------------------------------------------");
-                if (card1TrainTotal != 0) {
+                if (TrainTotal != 0) {
                     System.out.println("Total cost of train journeys is $" + TrainTotal);
                 }
-                if (card1TramTotal != 0) {
+                if (TramTotal != 0) {
                     System.out.println("Total cost of tram journeys is $" + TramTotal);
                 }
-                if (card1BusTotal != 0) {
+                if (BusTotal != 0) {
                     System.out.println("Total cost of bus journeys is $" + BusTotal);
                 }
                 System.out.println("---------------------------------------------------------");
@@ -2897,13 +2896,13 @@ public class SystemInterface {
             } else {
                 System.out.println("Total transport mode journeys cost/fare:");
                 System.out.println("---------------------------------------------------------");
-                if (card1TrainTotal != 0) {
+                if (TrainTotal != 0) {
                     System.out.println("Total cost of train journeys is $" + TrainTotal);
                 }
-                if (card1TramTotal != 0) {
+                if (TramTotal != 0) {
                     System.out.println("Total cost of tram journeys is $" + TramTotal);
                 }
-                if (card1BusTotal != 0) {
+                if (BusTotal != 0) {
                     System.out.println("Total cost of bus journeys is $" + BusTotal);
                 }
                 System.out.println("---------------------------------------------------------");
@@ -3073,13 +3072,13 @@ public class SystemInterface {
             } else {
                 System.out.println("Total transport mode journeys cost/fare:");
                 System.out.println("---------------------------------------------------------");
-                if (card2TrainTotal != 0) {
+                if (TrainTotal != 0) {
                     System.out.println("Total cost of train journeys is $" + TrainTotal);
                 }
-                if (card2TramTotal != 0) {
+                if (TramTotal != 0) {
                     System.out.println("Total cost of tram journeys is $" + TramTotal);
                 }
-                if (card2BusTotal != 0) {
+                if (BusTotal != 0) {
                     System.out.println("Total cost of bus journeys is $" + BusTotal);
                 }
                 System.out.println("---------------------------------------------------------");
